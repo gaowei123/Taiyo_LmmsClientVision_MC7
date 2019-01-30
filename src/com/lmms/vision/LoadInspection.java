@@ -1,6 +1,8 @@
 package com.lmms.vision;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -9,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -286,6 +289,222 @@ public class LoadInspection {
             return "";
         }
 	}
+	
+	private static File getLastModifiedFile(String dirPath){
+	    File dir = new File(dirPath);
+	    File[] files = dir.listFiles();
+	    if (files == null || files.length == 0) {
+	        return null;
+	    }
+
+	    File lastModifiedFile = files[0];
+	    for (int i = 1; i < files.length; i++) {
+	       if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+	           lastModifiedFile = files[i];
+	       }
+	    }
+	    return lastModifiedFile;
+	}
+	
+	
+	public static void funResultReadingFile()  throws IOException, InterruptedException
+	{
+		System.out.println("----Reading File Logic Debug---- In Function funResultReadingFile");
+		
+		//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
+		System.out.println(" LOAD INSPECTION -- 1.1.3 							LoadDB.isReflashQTY = " + String.valueOf(LoadDB.isReflashQTY));
+	    while(LoadDB.isReflashQTY)
+		{
+			System.out.println(" LOAD INSPECTION -- 1.1.4 											LoadDB.isReflashQTY = " + String.valueOf(LoadDB.isReflashQTY));
+	        
+			Thread.sleep(50);
+		}
+		
+		isCheckingResult =true;
+		
+		
+		//1.0 get folder path
+		String path =  ConfigLog.readingFilePath;
+		System.out.println("----Reading File Logic Debug---- Folder path:" + path);
+		
+		
+		//2.0 get file name
+		File LatestFile = getLastModifiedFile(path);
+		
+		if(LatestFile == null) {
+			return ;
+		}
+		
+		String FileName = LatestFile.getName();
+		System.out.println("----Reading File Logic Debug---- File Name:" + FileName);
+		
+	
+		//3. Read file to Buffer
+		BufferedReader BufferRead = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path + "\\" + FileName)), "UTF-8"));
+		
+		
+		
+    	int PassCount =0;
+    	int FailCount = 0;
+    	int TotalCount = 0;
+		String LastMarkName = "";
+		boolean PassFailFlag = true;
+		
+		//4. foreach each line   Main Counting Logic
+		String Str_ReadLine =BufferRead.readLine();
+		while(Str_ReadLine != null) 
+		{
+			System.out.println("----Reading File Logic Debug---- String Line : "+Str_ReadLine);
+			
+			if(Str_ReadLine.equals("")) {
+				continue;
+			}
+			
+			String[] ArrLine = Str_ReadLine.split(",");
+			String MarkName="";
+			String MarkResult ="";
+			
+			try {
+				 MarkName = ArrLine[1].split("--")[1];
+			}
+			catch(Exception e)
+			{
+				MarkName = ArrLine[1];
+			}
+				
+			try {
+				 MarkResult = ArrLine[3];
+			}
+			catch(Exception e) 
+			{
+				 MarkResult = "NG";
+			}
+			
+			System.out.println("----Reading File Logic Debug---- Line Result --  MarkName:"+MarkName+",  MarkResult:"+MarkResult);
+			
+			//when read a new file, lastmarkname is empty, set first line mark name (deflaut)
+			if(LastMarkName.equals(""))
+				LastMarkName = MarkName;
+			
+			if(MarkName.equals(LastMarkName)) 
+			{
+				if(MarkResult.equals("OK") && PassFailFlag!= false)
+				{
+					PassFailFlag = true;
+				}
+				else
+				{
+					PassFailFlag = false;
+				}
+			}
+			else
+			{
+				if(PassFailFlag)
+				{
+					TotalCount ++;
+					PassCount ++;
+				}
+				else
+				{
+					TotalCount ++;
+					FailCount ++;
+				}
+				
+				
+				//Reset Flag  Mark Name For new mark
+				PassFailFlag = true;
+				LastMarkName = MarkName;
+				
+				//Check the new mark
+				if(MarkResult.equals("OK")  && PassFailFlag!= false)
+				{
+					PassFailFlag = true;
+				}
+				else
+				{
+					PassFailFlag = false;
+				}
+			}
+		
+			
+			Str_ReadLine =BufferRead.readLine();
+		}
+		
+		//Count The Latest Mark
+		if(PassFailFlag)
+		{
+			TotalCount ++;
+			PassCount ++;
+		}
+		else
+		{
+			TotalCount ++;
+			FailCount ++;
+		}
+		
+		BufferRead.close();
+	
+		System.out.println("----Reading File Logic Debug---- Reading File Finish Result : TotalCount:"+TotalCount+",  PassCount:"+PassCount+",  FailCount:"+FailCount);
+		
+		
+		//5.0 copy logic from funResultCheck()
+    	try{
+    		    passStatus ="false";
+    		    failStatus = "false";
+				if (PassCount >0 ) { 
+					
+					insTotalPass=insTotalPass + PassCount ;
+					MainClient.lblTotalPass.setText(Integer.toString(insTotalPass));
+					
+					MainClient.lblstatPass.setBackground(new Color(0, 0, 255));
+	            	MainClient.lblstatFail.setBackground(new Color(105, 105, 105)); 
+	            	
+	            	passStatus = "true";
+	            	LoadDB.mainResult = "PASS";
+	            }
+				else
+				{
+					MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
+				} 
+				
+	            if (FailCount > 0) {	
+	            	
+	            	insTotalFail = 	insTotalFail + FailCount;
+	             	MainClient.lblTotalFail.setText(Integer.toString(insTotalFail));
+	             	
+	            	MainClient.lblstatPass.setBackground(new Color(105, 105, 105)); 
+	            	MainClient.lblstatFail.setBackground(new Color(0, 0, 255)); 
+	            	
+	            	failStatus = "true";
+	            	LoadDB.mainResult = "FAIL";  //IF HAS FAIL COUNT, RECOVER THE RESULT AFTER PASS COUNT
+	            }
+	            else
+	            {
+	            	MainClient.lblstatFail.setBackground(new Color(105, 105, 105));
+	            }
+	           
+	            
+	            LoadDB.todayTotalQuantity =  LoadDB.todayTotalQuantity +PassCount +  FailCount;
+            	LoadDB.todayOKTotalQuantity = LoadDB.todayOKTotalQuantity + PassCount;
+            	LoadDB.todayNGTotalQuantity = LoadDB.todayNGTotalQuantity + FailCount;
+            	
+            	funGetCurrentQuantity(); 
+            	LoadDB.funSendCountPassAndFailLMMS();
+            	LoadDB.funSendResultLMMS();
+        		
+            	MainClient.lblTotalQuantity.setText(Integer.toString(LoadDB.todayTotalQuantity)); 
+        	
+    	}
+		catch (Exception e)
+    	{
+			System.out.println(e.toString());
+    	}
+    	
+        isCheckingResult = false;
+		
+	}
+	
+	
 	
 	
 	public static void funResultGraphicsList()  throws IOException, InterruptedException

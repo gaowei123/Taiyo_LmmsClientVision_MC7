@@ -66,20 +66,7 @@ import javax.swing.JOptionPane;
 
 public class MainClient {
 
-	//public static TimerTask task;
-	//public static Timer timer;
-	///public static TimerTask task2;
-	//public static Timer timer2;
-	//public static TimerTask task3;
-	//public static Timer timer3;
-	//public static RunDB task4;
-	//public static Timer timer4;
-	//public static TimerTask task5;
-	//public static Timer timer5;
-	
-	//public static Thread t1;
 	public static JLabel jlabelFrame;
-	private static BufferedImage image;
 	public static Label lblstatVision; 
 	public static Label lblStat;
 	public static Label lblStat2;
@@ -143,25 +130,41 @@ public class MainClient {
 	public static Boolean resetClick = false;
 	
 	public static void main (String[] args) throws AWTException {
-		ConfigLog.machinenoSet = "8";
-		new MainClient();
-		
 		try {
+			
+			new MainClient();
+			
 			ConfigLog.getPropValues();
+			
+			
+			//Set Background cover
+			String CoverPath = "";
+	        if(ConfigLog.machinenoSet.equals("6")) {
+	        	CoverPath = ".\\TAIYO\\lmms_vision_back_no6.jpg";
+	        }else if(ConfigLog.machinenoSet.equals("7")) {
+	        	CoverPath = ".\\TAIYO\\lmms_vision_back_no7.jpg";
+	        }else if(ConfigLog.machinenoSet.equals("8")) {
+	        	CoverPath = ".\\TAIYO\\lmms_vision_back_no8.jpg";
+	        }else {CoverPath = ".\\TAIYO\\lmms_vision_back_no8.jpg"; }
+			
+	        jlabelFrame.setIcon(new ImageIcon(CoverPath));
+	        //Set Background cover
+			
+	        workerSystem();
+	        
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		workerSystem();
+		
 	}
 	
 	public static void workerSystem()
 	{
-		LoadVision.scr = new Screen();
-		
-		RunSys task1 = new RunSys();
-		Thread t1 = new Thread(task1);
-		t1.start();
+		//LoadVision.scr = new Screen();
+		//RunSys task1 = new RunSys();
+		//Thread t1 = new Thread(task1);
+		//t1.start();
 		
 		RunInspection task2 = new RunInspection();
 		Thread t2 = new Thread(task2);
@@ -632,9 +635,6 @@ public class MainClient {
         myPanel2.add(controls2, BorderLayout.CENTER);
         
         jlabelFrame = new JLabel("LMMS: VISION");
-        jlabelFrame.setIcon(new ImageIcon("C:\\Users\\Mohd Naim Afifi\\Documents\\workspace\\LMMSClientVision\\TAIYO\\lmms_vision_back_no8.jpg"));
-        //jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back2.jpg"));
-        funSelectBack();
         jlabelFrame.setBounds(0, 0, 1129, 42);
         panel.add(jlabelFrame);
         
@@ -647,13 +647,9 @@ public class MainClient {
         controls3.setSize(300, 200);
         
         selectInputTechnician = new JComboBox();
-        //selectInputTechnician.addItem("TEACHING");
-        //selectInputTechnician.addItem("PROJECT TESTING");
         selectInputTechnician.addItem("BUYOFF");
-      //  selectInputTechnician.addItem("PM");
         selectInputTechnician.addItem("MAINTAINENCE");
         selectInputTechnician.addItem("SETUP");
-      //  selectInputTechnician.addItem("SERVICE/5S");
         selectInputTechnician.addItem("NO SCHEDULE");
         selectInputTechnician.addItem("BREAKDOWN");
         selectInputTechnician.addItem("TESTING");
@@ -664,7 +660,7 @@ public class MainClient {
         
         myPanel4  = new JPanel(new BorderLayout(5,5));
         myPanel4.setSize(2000,200);
-        //myPanel4.add(controls3, BorderLayout.CENTER);
+   
         
         ActionListener technicianCancelEvent=new ActionListener(){
             public void actionPerformed(ActionEvent ae)
@@ -695,41 +691,7 @@ public class MainClient {
         guiFrame.setVisible(true);
     }
 	
-	private static void funSelectBack()
-	{
-		if(ConfigLog.machinenoSet.equals("1"))
-		{
-	        jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no1.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("2"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no2.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("3"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no3.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("4"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no4.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("5"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no5.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("6"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no6.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("7"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no7.jpg"));
-		}
-		else if(ConfigLog.machinenoSet.equals("8"))
-		{
-			jlabelFrame.setIcon(new ImageIcon("TAIYO/lmms_vision_back_no8.jpg"));
-		}
-	}
+	
 	
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {

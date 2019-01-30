@@ -4,12 +4,16 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimerTask;
 
+import org.python.modules.gc;
 import org.sikuli.script.Screen;
 
 //import com.lmms.vision.LoadVision;
@@ -30,10 +34,15 @@ public class RunInspection implements Runnable{
 		
 		while(true)
 		{
-			MainClient.lblStat4.setText("RI:001");	
-			SequenceInspection();
+			
 			try {
+				
+				MainClient.lblStat4.setText("RI:001");	
+				
+				SequenceInspection();
+				
 				Thread.sleep(100);
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -44,6 +53,7 @@ public class RunInspection implements Runnable{
 	public static void SequenceInspection()
 	{
 		try{
+			
 			ProcessInspect();
 		}
 		 catch (Exception e) {
@@ -51,58 +61,179 @@ public class RunInspection implements Runnable{
 		}	
 	}
 	
-	public static void ProcessInspect() throws IOException, InterruptedException
+	public static void ProcessInspect() throws Exception
 	{
-		//LoadInspection.funCheckInspectionPos();
-		//LoadInspection.funResultGraphicsList();
-		//LoadDB.funReadDBParts();
-		//2018 01 24 by Wei LiJia for Decrease Counting Issue
-		try { 
-			//LoadDB.funStatusLog("LoadDB.currentOperation","LoadDB.rmsStatus","RunInspection.startNew","inspectReady","inspectReadyBuf","","","","","","","","","","",""
-			//		,LoadDB.currentOperation,LoadDB.rmsStatus, String.valueOf(startNew),String.valueOf(inspectReady),String.valueOf(inspectReadyBuf),"","","","","","","","","","","");
-		} catch (Exception e) {
-			//e.printStackTrace();
-		} 
-		//if(LoadDB.currentOperation.equals("VISION"))
+	
+		if(LoadDB.rmsStatus.equals("loadlaser") || LoadDB.rmsStatus.equals("runinspect")||LoadDB.rmsStatus.equals("adjust"))
 		{
-			
-			if(LoadDB.rmsStatus.equals("loadlaser") || LoadDB.rmsStatus.equals("runinspect")||LoadDB.rmsStatus.equals("adjust"))
+			if(!CheckJobComplete())
 			{
-				if(!CheckJobComplete())
-				{
-					//2018 01 20 by Wei LiJia add inspectReadyBuf
-					//if(inspectReady)
-					//System.out.println("1. "+String.valueOf(inspectReady) + " " + String.valueOf(inspectReadyBuf)) ;
-					if(inspectReady && !inspectReadyBuf)
-					{
-						
-						MainClient.lblStat.setBackground(new Color(0, 255, 0));
-						//LoadInspection.funResultCheck(); //2018 06 28 MARKED BY WEI LIJIA. ADD THIS LOGIC INTO LoadInspection.funResultGraphicsList() FOR MULTI-PART IN ONE JIG FOR MACHINE 6+7
-						
-						LoadInspection.funCheckInspectionPos();
-						try {
-							
-							LoadInspection.funResultGraphicsList();
-						} catch (IOException e) {
-							//e.printStackTrace();
-						} catch (InterruptedException e) {
-							//e.printStackTrace();
-						}
-						inspectReady = false;
-						inspectReadyBuf = true;
-						MainClient.lblstatInspect.setBackground(new Color(105, 105, 105));
-						MainClient.lblStat.setBackground(new Color(105, 105, 105));
-						MainClient.lblStat4.setBackground(new Color(105, 105, 105));
-						MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
-						MainClient.lblstatFail.setBackground(new Color(105, 105, 105));
-					}
+				//==================================== New Logic  reading txt file. dwyane 2019-1-30 ====================================//
 				
+				MainClient.lblStat.setBackground(new Color(0, 255, 0));
+				
+				try {
+					LoadInspection.funResultReadingFile();
+				} catch (IOException e) {
+					//e.printStackTrace();
+				} catch (InterruptedException e) {
+					//e.printStackTrace();
 				}
+				
+				
+				MainClient.lblstatInspect.setBackground(new Color(105, 105, 105));
+				MainClient.lblStat.setBackground(new Color(105, 105, 105));
+				MainClient.lblStat4.setBackground(new Color(105, 105, 105));
+				MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
+				MainClient.lblstatFail.setBackground(new Color(105, 105, 105));
+				
+				//==================================== New Logic  reading txt file. dwyane 2019-1-30 ====================================//
+				
+				
+				
+				
+				
+				//==================================== old logic base on catch pic  no use ====================================//
+				/*
+				 * if(inspectReady && !inspectReadyBuf) {
+				 * 
+				 * MainClient.lblStat.setBackground(new Color(0, 255, 0));
+				 * 
+				 * LoadInspection.funCheckInspectionPos();
+				 * 
+				 * try {
+				 * 
+				 * LoadInspection.funResultGraphicsList(); } catch (IOException e) {
+				 * //e.printStackTrace(); } catch (InterruptedException e) {
+				 * //e.printStackTrace(); }
+				 * 
+				 * inspectReady = false; inspectReadyBuf = true;
+				 * 
+				 * MainClient.lblstatInspect.setBackground(new Color(105, 105, 105));
+				 * MainClient.lblStat.setBackground(new Color(105, 105, 105));
+				 * MainClient.lblStat4.setBackground(new Color(105, 105, 105));
+				 * MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
+				 * MainClient.lblstatFail.setBackground(new Color(105, 105, 105)); }
+				 */
+				
+				//==================================== old logic base on catch pic  no use ====================================//
+			
+			}
+		}
+			
+		
+		// whatever remove file.
+		BackUpFile();
+			  
+	
+	}
+	
+	public static void BackUpFile () throws Exception 
+	{
+		String currFilePath = ConfigLog.readingFilePath;
+		
+		File dir = new File(currFilePath);
+		File[] files = dir.listFiles();
+		if(files.length == 0)
+			return;
+		
+		
+		//check backup folder whether exist   if not create
+		String BackupPath = currFilePath + "\\\\Backup";
+		File file =new File(BackupPath);    
+		
+		if(!file.exists()  && !file.isDirectory())
+		{       
+		    file .mkdir();    
+		}
+		
+		
+		//check today backup folder whether exist   if not create
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String TodayFolder = BackupPath + "\\\\" + sdf.format(new Date());
+		File file2 =new File(TodayFolder);
+		
+		if(!file2.exists()  && !file2.isDirectory())
+		{       
+			file2 .mkdir();    
+		}
+		
+		
+		//copy file
+		copyFile(currFilePath,TodayFolder);
+		
+		//delete file
+		delFile(currFilePath);
+		
+	}
+	
+	public static void copyFile(String FileFromPath, String FileToPath) throws IOException
+	{
+		//nothing return
+		File FileFrom = new File(FileFromPath);
+		if(!FileFrom.exists()  && !FileFrom.isDirectory())
+			 return;
+		
+		
+        File FileTo = new File(FileToPath);
+        if(!FileTo.exists()  && !FileTo.isDirectory()) {
+        	FileTo.mkdir();
+        }
+        
+        
+        File[] AllTxtFile = FileFrom.listFiles();
+        
+        for(File file : AllTxtFile) {
+        	
+        	if(file.isDirectory())
+        		continue;
+        	
+        	FileInputStream in = new FileInputStream(file);
+        	
+        	SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+        	String FileToName = FileTo + "\\\\" + file.getName().split("\\.")[0] + "_" + sdf.format(new Date()) + ".txt";
+            FileOutputStream out = new FileOutputStream(FileToName);
+        	
+            byte[] buffer=new byte[102400];
+            int readByte = 0;
+            while((readByte = in.read(buffer)) != -1){
+                out.write(buffer, 0, readByte);
+            }
+        
+            in.close();
+            out.close();
+        }
+        
+    }
+	
+	 public static void delFile(String path) throws InterruptedException 
+	 {
+		File delPath = new File(path);
+		if(!delPath.exists()  && !delPath.isDirectory())
+			return ;
+		
+		 
+		File[] delFiles = delPath.listFiles();
+		
+		for(File file : delFiles) {
+			
+			if(file.isDirectory())
+				continue;
+		
+			Boolean Result = file.delete();
+			
+			if(Result) {
+				Thread.sleep(100);
+				gc.collect();
+				Thread.sleep(50);
+				file.delete();
 			}
 			
 		}
-
-	}
+		 
+		return;
+	 }
+	
 	
 	public static Boolean CheckJobComplete() throws InterruptedException
 	{

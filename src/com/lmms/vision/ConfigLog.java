@@ -31,6 +31,7 @@ public class ConfigLog {
 	public static String passpointSet;
 	public static String failpointSet;
 	public static String resetpointSet;
+	public static String readingFilePath;
 	
 	public static void getPropValues() throws IOException {
 		 
@@ -62,6 +63,7 @@ public class ConfigLog {
 			passpointSet = prop.getProperty("passpointSet");
 			failpointSet = prop.getProperty("failpointSet");
 			resetpointSet = prop.getProperty("resetpointSet"); 
+			readingFilePath = prop.getProperty("readingFilePath");
 
 			MainClient.machinenoField.setText(machinenoSet);
 			MainClient.connectionstrField.setText(connectionstrSet);
