@@ -67,6 +67,11 @@ public class LoadDB {
 	      Connection con = null;  
 	      Statement stmt = null;  
 	      ResultSet rs = null;  
+	      
+	      String str_light  = "";
+	      String str_camera = "";
+	      String str_power = "";
+	      
 
 	      try {  
 	         // Establish the connection.  
@@ -74,12 +79,18 @@ public class LoadDB {
 	         con = DriverManager.getConnection(connectionUrl);  
 
 	         // Create and execute an SQL statement that returns some data.  
-	         String SQL = "SELECT * FROM LMMSWatchDog WHERE machineID='" + ConfigLog.machinenoSet + "'";  
+	         String SQL = "SELECT a.*, isnull( b.Lighting,'UNKNOWN') as Lighting  "; 
+	         SQL += " , isnull(b.Camera,'UNKNOWN') as Camera ";
+	         SQL += " , case when b.CurrentPower is null then 'UNKNOWN' else b.CurrentPower + '%' end  as CurrentPower ";
+	         SQL += "  FROM LMMSWatchDog a left join LMMSBom b on a.partNumber = b.partNumber and a.machineID = b.machineID ";
+	         SQL += "  WHERE a.machineID= '"+ConfigLog.machinenoSet+"' ";
 	         stmt = con.createStatement();  
 	         //stmt = con.createStatement();  
 	         rs = stmt.executeQuery(SQL);  
 	         //stmt.executeUpdate(SQL); 
 	         // Iterate through the data in the result set and display it.  
+	         
+	         
 	         while (rs.next()) {  
 	           //System.out.println(rs.getString(1) + " " + rs.getString(2));  
 	           currentOpsDateTime = rs.getString("dateTime");
@@ -102,8 +113,28 @@ public class LoadDB {
 	           rmsStatus = rs.getString("rmsStatus");
 	           todayTotalQuantityFirstStart =Integer.parseInt(rs.getString("todayTotalQuantity")) ; //only machine 7 no need to +1
 	           startJobFlag = rs.getString("goodOK").equals("true")?true:false;  //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
-		        System.out.println(" LOAD DB -- 1.1: DB DATA: TOTAL QTY = "+String.valueOf(todayTotalQuantityFirstStart) + "][rs.getString(goodOK="+rs.getString("goodOK")+"][startJobFlag="+String.valueOf( startJobFlag)+"]");
+
+	           str_light = rs.getString("Lighting");
+	           str_camera = rs.getString("Camera");
+	           str_power = rs.getString("CurrentPower");
+	         
 	         }  
+	         
+	         
+	    	 if(str_light.equals("UNKNOWN")) 
+				 MainClient.lb_Light.setForeground(Color.red);
+        	 
+			 if(str_camera.equals("UNKNOWN")) 
+        	   MainClient.lb_Camera.setForeground(Color.red);
+        	 
+			 if(str_power.equals("UNKNOWN") ) 
+        	   MainClient.lb_CurrentPWR.setForeground(Color.red);
+	        	  
+	           
+	           MainClient.lb_Light.setText(str_light);
+	           MainClient.lb_Camera.setText(str_camera);
+	           MainClient.lb_CurrentPWR.setText(str_power);
+	         
 	         //System.out.println(currentPartNumber);  
 	         //2018 06 18 by wei lijia move below logic from if(runFirstTime), for the partial job. 
 	         //2018 06 19 by wei lijia add ischeckresult interlok
@@ -128,6 +159,9 @@ public class LoadDB {
 	        }
 	        
 	         //System.out.println(currentPartNumber);  
+			
+		
+			
 	         MainClient.lblpartNumber.setText(currentPartNumber);
 	         MainClient.lbljobNumber.setText(currentJobNumber);
 	         MainClient.lblProcess.setText(currentOperation);
