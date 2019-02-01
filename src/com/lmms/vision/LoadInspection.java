@@ -500,6 +500,8 @@ public class LoadInspection {
 			System.out.println(e.toString());
     	}
     	
+    	BufferRead.close();
+    	
         isCheckingResult = false;
 		
 	}
