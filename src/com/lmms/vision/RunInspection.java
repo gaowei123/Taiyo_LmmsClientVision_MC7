@@ -23,7 +23,6 @@ public class RunInspection implements Runnable{
 	
 	public static Boolean startNew = false;
 	public static Boolean inspectReady = false;
-	
 	public static Boolean inspectReadyBuf = false; //2018 01 20 by Wei LiJia
 	
 	public RunInspection(){
@@ -31,101 +30,85 @@ public class RunInspection implements Runnable{
 	}
 
 	public void run() {
-		
 		while(true)
 		{
-			
 			try {
-				
-				MainClient.lblStat4.setText("RI:001");	
-				
-				SequenceInspection();
 				
 				Thread.sleep(100);
 				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				MainClient.lblStat4.setText("RI:001");	
+				
+				ProcessInspect();
+				
+			} catch (Exception e) {
+			
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public static void SequenceInspection()
-	{
-		try{
-			
-			ProcessInspect();
-		}
-		 catch (Exception e) {
-			e.printStackTrace();
-		}	
-	}
+	
 	
 	public static void ProcessInspect() throws Exception
 	{
-	
-		if(LoadDB.rmsStatus.equals("loadlaser") || LoadDB.rmsStatus.equals("runinspect")||LoadDB.rmsStatus.equals("adjust"))
+		if(LoadDB.rmsStatus.equals("loadlaser") || LoadDB.rmsStatus.equals("runinspect"))
 		{
 			if(!CheckJobComplete())
 			{
-				//==================================== New Logic  reading txt file. dwyane 2019-1-30 ====================================//
-				
-				MainClient.lblStat.setBackground(new Color(0, 255, 0));
-				
-				try {
+				//========= New Logic  reading txt file. dwyane 2019-1-30 =========//
+				try 
+				{
+					
+					MainClient.lblStat.setBackground(new Color(0, 255, 0));
+					
 					LoadInspection.funResultReadingFile();
-				} catch (IOException e) {
-					//e.printStackTrace();
-				} catch (InterruptedException e) {
-					//e.printStackTrace();
-				}
-				
-				
-				MainClient.lblstatInspect.setBackground(new Color(105, 105, 105));
-				MainClient.lblStat.setBackground(new Color(105, 105, 105));
-				MainClient.lblStat4.setBackground(new Color(105, 105, 105));
-				MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
-				MainClient.lblstatFail.setBackground(new Color(105, 105, 105));
-				
-				//==================================== New Logic  reading txt file. dwyane 2019-1-30 ====================================//
-				
-				
-				
-				
-				
-				//==================================== old logic base on catch pic  no use ====================================//
-				/*
-				 * if(inspectReady && !inspectReadyBuf) {
-				 * 
-				 * MainClient.lblStat.setBackground(new Color(0, 255, 0));
-				 * 
-				 * LoadInspection.funCheckInspectionPos();
-				 * 
-				 * try {
-				 * 
-				 * LoadInspection.funResultGraphicsList(); } catch (IOException e) {
-				 * //e.printStackTrace(); } catch (InterruptedException e) {
-				 * //e.printStackTrace(); }
-				 * 
-				 * inspectReady = false; inspectReadyBuf = true;
-				 * 
-				 * MainClient.lblstatInspect.setBackground(new Color(105, 105, 105));
-				 * MainClient.lblStat.setBackground(new Color(105, 105, 105));
-				 * MainClient.lblStat4.setBackground(new Color(105, 105, 105));
-				 * MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
-				 * MainClient.lblstatFail.setBackground(new Color(105, 105, 105)); }
-				 */
-				
-				//==================================== old logic base on catch pic  no use ====================================//
-			
+				} 
+				catch (IOException e) { } catch (InterruptedException e) { }
+				//========= New Logic  reading txt file. dwyane 2019-1-30 =========//
 			}
 		}
-			
 		
 		// whatever remove file.
 		BackUpFile();
-			  
+		
+	}
 	
+	
+	
+	
+	public static Boolean CheckJobComplete() throws InterruptedException
+	{
+		if((LoadInspection.insTotalPass + LoadInspection.insTotalFail) >= LoadDB.totalQuantity)
+		{
+			//if(!LoadDB.runTechnician)
+			{
+				MainClient.lblCompleteStatus.setVisible(true);
+				MainClient.lblCompleteStatus.setText("JOB COMPLETE! - PLEASE SCAN NEXT JOB NUMBER");
+				MainClient.lblCompleteStatus.setBackground(new Color(105, 105, 105));
+				Thread.sleep(1000);
+				MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
+			}
+			if(startNew)
+			{
+				startNew = false;
+				LoadDB.funSendCompleteLMMS();
+			}
+			return true;
+		}
+		else
+		{
+			//if(!LoadDB.runTechnician)
+			{
+				MainClient.lblCompleteStatus.setVisible(false);
+			}
+			if(!startNew)
+			{
+				startNew = true;
+				LoadDB.funReadLastWatchLog();
+				LoadDB.funSendStartVisionLMMS();
+			}
+			return false;
+		}
 	}
 	
 	public static void BackUpFile () throws Exception 
@@ -233,42 +216,6 @@ public class RunInspection implements Runnable{
 		 
 		return;
 	 }
-	
-	
-	public static Boolean CheckJobComplete() throws InterruptedException
-	{
-		if((LoadInspection.insTotalPass + LoadInspection.insTotalFail) >= LoadDB.totalQuantity)
-		{
-			//if(!LoadDB.runTechnician)
-			{
-				MainClient.lblCompleteStatus.setVisible(true);
-				MainClient.lblCompleteStatus.setText("JOB COMPLETE! - PLEASE SCAN NEXT JOB NUMBER");
-				MainClient.lblCompleteStatus.setBackground(new Color(105, 105, 105));
-				Thread.sleep(1000);
-				MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
-			}
-			if(startNew)
-			{
-				startNew = false;
-				LoadDB.funSendCompleteLMMS();
-			}
-			return true;
-		}
-		else
-		{
-			//if(!LoadDB.runTechnician)
-			{
-				MainClient.lblCompleteStatus.setVisible(false);
-			}
-			if(!startNew)
-			{
-				startNew = true;
-				LoadDB.funReadLastWatchLog();
-				LoadDB.funSendStartVisionLMMS();
-			}
-			return false;
-		}
-	}
 	
 	
 }

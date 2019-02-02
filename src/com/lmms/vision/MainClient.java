@@ -195,13 +195,15 @@ public class MainClient {
 		//Thread t1 = new Thread(task1);
 		//t1.start();
 		
+		RunDB task3 = new RunDB();
+        Thread t3 = new Thread(task3);
+        t3.start();
+		
+		
 		RunInspection task2 = new RunInspection();
 		Thread t2 = new Thread(task2);
 	    t2.start();
 		
-	    RunDB task3 = new RunDB();
-        Thread t3 = new Thread(task3);
-        t3.start();
 	}
 	
 	
