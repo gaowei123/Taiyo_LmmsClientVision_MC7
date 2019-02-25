@@ -63,12 +63,14 @@ public class RunInspection implements Runnable{
 					
 					LoadInspection.funResultReadingFile();
 				} 
-				catch (IOException e) { } catch (InterruptedException e) { }
+				catch (IOException e) { 
+					
+				} catch (InterruptedException e) { }
 				//========= New Logic  reading txt file. dwyane 2019-1-30 =========//
 			}
 		}
 		
-		// whatever remove file.
+		// whatever count or not  remove file.
 		BackUpFile();
 		
 	}
@@ -114,17 +116,21 @@ public class RunInspection implements Runnable{
 	public static void BackUpFile () throws Exception 
 	{
 		String currFilePath = ConfigLog.readingFilePath;
-		
 		File dir = new File(currFilePath);
+		if(!dir.exists()  && !dir.isDirectory())
+		{       
+			dir .mkdir();
+		}
+		
+		//No file in folder return
 		File[] files = dir.listFiles();
 		if(files.length == 0)
 			return;
 		
 		
 		//check backup folder whether exist   if not create
-		String BackupPath = currFilePath + "\\\\Backup";
-		File file =new File(BackupPath);    
-		
+		String BackupPath = ConfigLog.backupPath;
+		File file =new File(BackupPath);
 		if(!file.exists()  && !file.isDirectory())
 		{       
 		    file .mkdir();    
@@ -133,8 +139,8 @@ public class RunInspection implements Runnable{
 		
 		//check today backup folder whether exist   if not create
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String TodayFolder = BackupPath + "\\\\" + sdf.format(new Date());
-		File file2 =new File(TodayFolder);
+		String BackUp_TodayFolder = BackupPath + "\\\\" + sdf.format(new Date());
+		File file2 =new File(BackUp_TodayFolder);
 		
 		if(!file2.exists()  && !file2.isDirectory())
 		{       
@@ -143,7 +149,7 @@ public class RunInspection implements Runnable{
 		
 		
 		//copy file
-		copyFile(currFilePath,TodayFolder);
+		copyFile(currFilePath,BackUp_TodayFolder);
 		
 		//delete file
 		delFile(currFilePath);

@@ -72,7 +72,7 @@ public class MainClient {
 	public static Label lblStat2;
 	public static Label lblStat3;
 	public static Label lblStat4;
-	
+	 
 	public static Label lblAdam;
 	public static Label lblSig1;
 	public static Label lblSig2;
@@ -185,7 +185,6 @@ public class MainClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void workerSystem()
@@ -405,13 +404,6 @@ public class MainClient {
 		 * 13); panel.add(lblstatPass);
 		 */
         
-        lblstatInspect = new Label("INSPECT");
-        lblstatInspect.setForeground(Color.WHITE);
-        lblstatInspect.setFont(new Font("Century Gothic", Font.BOLD, 12));
-        lblstatInspect.setBackground(SystemColor.controlDkShadow);
-        lblstatInspect.setAlignment(Label.CENTER);
-        lblstatInspect.setBounds(0, 445, 62, 13);
-        panel.add(lblstatInspect);
         
         lblCompleteStatus = new Label("JOB COMPLETE!");
         lblCompleteStatus.setForeground(Color.WHITE);
@@ -420,7 +412,17 @@ public class MainClient {
         lblCompleteStatus.setAlignment(Label.CENTER);
         lblCompleteStatus.setBounds(0, 416, 123, 67);
         lblCompleteStatus.setVisible(false);
-       
+        panel.add(lblCompleteStatus);
+        
+        lblstatInspect = new Label("INSPECT");
+        lblstatInspect.setForeground(Color.WHITE);
+        lblstatInspect.setFont(new Font("Century Gothic", Font.BOLD, 12));
+        lblstatInspect.setBackground(SystemColor.controlDkShadow);
+        lblstatInspect.setAlignment(Label.CENTER);
+        lblstatInspect.setBounds(0, 445, 62, 13);
+        panel.add(lblstatInspect);
+        
+        
         
         lblStat = new Label("RS:000");
         lblStat.setForeground(Color.WHITE);
@@ -1162,15 +1164,15 @@ public class MainClient {
         	{
         		if( inHelpMode == false )
         		{
-	            String tech = selectInputTechnician.getSelectedItem().toString();
-	        	MainClient.lblCompleteStatus.setText("TECHNICIAN: " + tech);
-	        	MainClient.lblCompleteStatus.setBackground(new Color(255, 0, 0));
-	        	MainClient.lblCompleteStatus.setVisible(true);
-	        	LoadDB.eventTrigger = tech;
-	        	LoadDB.funUpdateLMMSEventTechnicianStart();
-	        	selectInputTechnician.setBackground(new Color(255,0,0));
-	        	LoadDB.runTechnician = true;
-	        	inHelpMode = true;
+		            String tech = selectInputTechnician.getSelectedItem().toString();
+		        	MainClient.lblCompleteStatus.setText("TECHNICIAN: " + tech);
+		        	MainClient.lblCompleteStatus.setBackground(new Color(255, 0, 0));
+		        	MainClient.lblCompleteStatus.setVisible(true);
+		        	LoadDB.eventTrigger = tech;
+		        	LoadDB.funUpdateLMMSEventTechnicianStart();
+		        	selectInputTechnician.setBackground(new Color(255,0,0));
+		        	LoadDB.runTechnician = true;
+		        	inHelpMode = true;
         		}
         	}
         	
@@ -1216,8 +1218,6 @@ public class MainClient {
 				}
 	        }
 	}
-
-
 }
 
 class RequestFocusListener implements AncestorListener

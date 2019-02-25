@@ -73,6 +73,7 @@ public class LoadInspection {
 		File LatestFile = getLastModifiedFile(path);
 		
 		if(LatestFile == null) {
+			isCheckingResult =false;
 			return ;
 		}
 		
@@ -241,6 +242,8 @@ public class LoadInspection {
 		catch (Exception e)
     	{
 			System.out.println(e.toString());
+			isCheckingResult =false;
+			BufferRead.close();
     	}
     	
     	BufferRead.close();

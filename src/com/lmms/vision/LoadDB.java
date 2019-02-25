@@ -121,14 +121,20 @@ public class LoadDB {
 	         }  
 	         
 	         
-	    	 if(str_light.equals("UNKNOWN")) 
+	         if(str_light.equals("UNKNOWN")) 
 				 MainClient.lb_Light.setForeground(Color.red);
+	    	 else
+	        	 MainClient.lb_Light.setForeground(Color.white);
         	 
 			 if(str_camera.equals("UNKNOWN")) 
         	   MainClient.lb_Camera.setForeground(Color.red);
+			 else
+	        	 MainClient.lb_Camera.setForeground(Color.white);
         	 
 			 if(str_power.equals("UNKNOWN") ) 
         	   MainClient.lb_CurrentPWR.setForeground(Color.red);
+			 else
+	        	 MainClient.lb_CurrentPWR.setForeground(Color.white);
 	        	  
 	           
 	           MainClient.lb_Light.setText(str_light);
@@ -215,7 +221,7 @@ public class LoadDB {
 		         runFirstTime = false;
 		         if(!runTechnician)
 		         {
-		        	 //MainClient.lblCompleteStatus.setVisible(false);
+		        	 MainClient.lblCompleteStatus.setVisible(false);
 		         }
 		         //todayTotalQuantity = currentQuantity; 
 		         //MainClient.lblTotalQuantity.setText(Integer.toString(todayTotalQuantity));
