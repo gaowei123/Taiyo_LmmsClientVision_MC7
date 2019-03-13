@@ -22,8 +22,6 @@ import com.lmms.vision.MainClient;
 public class RunInspection implements Runnable{
 	
 	public static Boolean startNew = false;
-	public static Boolean inspectReady = false;
-	public static Boolean inspectReadyBuf = false; //2018 01 20 by Wei LiJia
 	
 	public RunInspection(){
 		
@@ -36,12 +34,11 @@ public class RunInspection implements Runnable{
 				
 				Thread.sleep(100);
 				
-				MainClient.lblStat4.setText("RI:001");	
+				MainClient.lblStat4.setText("RI:001");
 				
 				ProcessInspect();
 				
 			} catch (Exception e) {
-			
 				e.printStackTrace();
 			}
 		}
@@ -51,28 +48,24 @@ public class RunInspection implements Runnable{
 	
 	public static void ProcessInspect() throws Exception
 	{
-		if(LoadDB.rmsStatus.equals("loadlaser") || LoadDB.rmsStatus.equals("runinspect"))
+		try 
 		{
 			if(!CheckJobComplete())
 			{
-				//========= New Logic  reading txt file. dwyane 2019-1-30 =========//
-				try 
-				{
-					
-					MainClient.lblStat.setBackground(new Color(0, 255, 0));
-					
-					LoadInspection.funResultReadingFile();
-				} 
-				catch (IOException e) { 
-					
-				} catch (InterruptedException e) { }
-				//========= New Logic  reading txt file. dwyane 2019-1-30 =========//
+				MainClient.lblStat.setBackground(new Color(0, 255, 0));
+				LoadInspection.isCheckingResult = true;
+				LoadInspection.funCounting();
+				LoadInspection.isCheckingResult = false;
 			}
+		} 
+		catch (IOException e) { 
+			LoadInspection.isCheckingResult = false;
+		} catch (InterruptedException e) {
+			LoadInspection.isCheckingResult = false;
 		}
 		
-		// whatever count or not  remove file.
-		BackUpFile();
-		
+		//whatever count or not, backup & remove file.
+	    CommonFunc.BackUpFile();
 	}
 	
 	
@@ -82,146 +75,29 @@ public class RunInspection implements Runnable{
 	{
 		if((LoadInspection.insTotalPass + LoadInspection.insTotalFail) >= LoadDB.totalQuantity)
 		{
-			//if(!LoadDB.runTechnician)
-			{
-				MainClient.lblCompleteStatus.setVisible(true);
-				MainClient.lblCompleteStatus.setText("JOB COMPLETE! - PLEASE SCAN NEXT JOB NUMBER");
-				MainClient.lblCompleteStatus.setBackground(new Color(105, 105, 105));
-				Thread.sleep(1000);
-				MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
-			}
+			//MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
+			//MainClient.lblCompleteStatus.setText("JOB COMPLETE!");
+			
 			if(startNew)
 			{
 				startNew = false;
 				LoadDB.funSendCompleteLMMS();
 			}
+			
 			return true;
 		}
+		
 		else
 		{
-			//if(!LoadDB.runTechnician)
-			{
-				MainClient.lblCompleteStatus.setVisible(false);
-			}
 			if(!startNew)
 			{
 				startNew = true;
-				LoadDB.funReadLastWatchLog();
-				LoadDB.funSendStartVisionLMMS();
 			}
 			return false;
 		}
 	}
 	
-	public static void BackUpFile () throws Exception 
-	{
-		String currFilePath = ConfigLog.readingFilePath;
-		File dir = new File(currFilePath);
-		if(!dir.exists()  && !dir.isDirectory())
-		{       
-			dir .mkdir();
-		}
-		
-		//No file in folder return
-		File[] files = dir.listFiles();
-		if(files.length == 0)
-			return;
-		
-		
-		//check backup folder whether exist   if not create
-		String BackupPath = ConfigLog.backupPath;
-		File file =new File(BackupPath);
-		if(!file.exists()  && !file.isDirectory())
-		{       
-		    file .mkdir();    
-		}
-		
-		
-		//check today backup folder whether exist   if not create
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String BackUp_TodayFolder = BackupPath + "\\\\" + sdf.format(new Date());
-		File file2 =new File(BackUp_TodayFolder);
-		
-		if(!file2.exists()  && !file2.isDirectory())
-		{       
-			file2 .mkdir();    
-		}
-		
-		
-		//copy file
-		copyFile(currFilePath,BackUp_TodayFolder);
-		
-		//delete file
-		delFile(currFilePath);
-		
-	}
 	
-	public static void copyFile(String FileFromPath, String FileToPath) throws IOException
-	{
-		//nothing return
-		File FileFrom = new File(FileFromPath);
-		if(!FileFrom.exists()  && !FileFrom.isDirectory())
-			 return;
-		
-		
-        File FileTo = new File(FileToPath);
-        if(!FileTo.exists()  && !FileTo.isDirectory()) {
-        	FileTo.mkdir();
-        }
-        
-        
-        File[] AllTxtFile = FileFrom.listFiles();
-        
-        for(File file : AllTxtFile) {
-        	
-        	if(file.isDirectory())
-        		continue;
-        	
-        	FileInputStream in = new FileInputStream(file);
-        	
-        	SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
-        	String FileToName = FileTo + "\\\\" + file.getName().split("\\.")[0] + "_" + sdf.format(new Date()) + ".txt";
-            FileOutputStream out = new FileOutputStream(FileToName);
-        	
-            byte[] buffer=new byte[102400];
-            int readByte = 0;
-            while((readByte = in.read(buffer)) != -1){
-                out.write(buffer, 0, readByte);
-            }
-        
-            in.close();
-            out.close();
-        }
-        
-    }
-	
-	 public static void delFile(String path) throws InterruptedException 
-	 {
-		File delPath = new File(path);
-		if(!delPath.exists()  && !delPath.isDirectory())
-			return ;
-		
-		 
-		File[] delFiles = delPath.listFiles();
-		
-		for(File file : delFiles) {
-			
-			if(file.isDirectory())
-				continue;
-		
-			Boolean Result = file.delete();
-			
-			if(Result) {
-				Thread.sleep(100);
-				gc.collect();
-				Thread.sleep(50);
-				file.delete();
-			}
-			
-		}
-		 
-		return;
-	 }
 	
 	
 }

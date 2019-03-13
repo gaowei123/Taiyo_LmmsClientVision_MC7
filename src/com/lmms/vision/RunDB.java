@@ -16,7 +16,6 @@ public class RunDB implements Runnable  {
 	
 	public RunDB(){
 		
-
     }
 	
 	public void run() {
@@ -35,6 +34,4 @@ public class RunDB implements Runnable  {
 			} catch (InterruptedException e) { }
 		}
 	}
-
-	
 }

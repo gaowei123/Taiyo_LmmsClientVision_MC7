@@ -15,248 +15,351 @@ import com.lmms.vision.ConfigLog;
 public class LoadDB {
 	public static String currentPartNumber;
 	public static String currentJobNumber;
-	public static String currentDescription;
-	public static String currentOpsDateTime;
 	public static int newQuantity;
 	public static int currentQuantity;
 	public static int totalQuantity;
 	public static int todayTotalQuantity;
-	public static int todayTotalQuantityFirstStart; //2018 06 18
+	public static int todayTotalQuantityFirstStart;//2018 06 18
 	public static int todayOKTotalQuantity;
 	public static int todayNGTotalQuantity;
 	public static String currentOperation = "";
-	public static String currentPrepDateOut;
-	public static String currentPrepDateIn;
-	public static String currentPaintDateOut;
-	public static String currentPaintDateIn;
-	public static String currentLaserDateOut;
-	public static String currentLaserDateIn;
-	public static String currentProductDateOut;
-	public static String currentProductDateIn;
-	public static String currenOwnerID;
-	public static String currentLaserFileA;
-	public static String currentLaserFileB;
 	public static String currentTotalPass;
 	public static String currentTotalFail;
-	public static String currentLastUpdated;
-	public static String rmsStatus;
-	public static String mainResult = "FAIL";
-	public static Boolean[] eventCheck = new Boolean[5];
-	public static String productionID = "0";
+	public static String rmsStatus;//technician runinspect standby loadlaser
 	public static String eventID = "0";
 	public static String eventTrigger = "POWER ON";
 	public static String[] ioName = new String[12];
 	public static String[] ioVal = new String[12];
 	public static Boolean[] ioValBool = new Boolean[12];
 	public static String adamOnline = "false";
-	public static Boolean runQty = false;
+	
 	public static Boolean runTechnician = false;
 	public static Boolean runFirstTime = true;
+	public static String connectionUrl = ConfigLog.connectionstrSet;
 	
-	public static String connectionUrl = ConfigLog.connectionstrSet ;//"jdbc:sqlserver://192.168.137.1:1433;instanceName=SQLEXPRESS;databaseName=LMMS_TAIYO;user=sa;password=sa0";
-	//public static String connectionUrl = "jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS;databaseName=LMMS_TAIYO;user=sa;password=sa0";
+	//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty. 
+	public static boolean startJobFlag = true; 
+	//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty. 
+	public static boolean isReflashQTY = false;
+	
+
+	//Dwyane - 2019-0304
+	public class WatchDogModel{
+		
+		String machineID = "";
+		
+		String partNumber = "";
+		String jobNumber = "";
+		
+		String currentOperation = "";
+		
+		int totalPass = 0;
+		int totalFail = 0;
+		int totalQty = 0;
+		
+		int todayTotalQuantity = 0;
+		int todayOKTotalQuantity = 0;
+		int todayNGTotalQuantity = 0;
+		
+		String modeName = "";
+		int currentTotalPass = 0;
+		int currentTotalFail = 0;
+		
+		
+		String model1name = "";
+		String model2name = "";
+		String model3name = "";
+		String model4name = "";
+		String model5name = "";
+		String model6name = "";
+		String model7name = "";
+		String model8name = "";
+		String model9name = "";
+		String model10name = "";
+		String model11name = "";
+		String model12name = "";
+		String model13name = "";
+		String model14name = "";
+		String model15name = "";
+		String model16name = "";
+		int ok1count = 0;
+		int ok2count = 0;
+		int ok3count = 0;
+		int ok4count = 0;
+		int ok5count = 0;
+		int ok6count = 0;
+		int ok7count = 0;
+		int ok8count = 0;
+		int ok9count = 0;
+		int ok10count = 0;
+		int ok11count = 0;
+		int ok12count = 0;
+		int ok13count = 0;
+		int ok14count = 0;
+		int ok15count = 0;
+		int ok16count = 0;
+		int ng1count = 0;
+		int ng2count = 0;
+		int ng3count = 0;
+		int ng4count = 0;
+		int ng5count = 0;
+		int ng6count = 0;
+		int ng7count = 0;
+		int ng8count = 0;
+		int ng9count = 0;
+		int ng10count = 0;
+		int ng11count = 0;
+		int ng12count = 0;
+		int ng13count = 0;
+		int ng14count = 0;
+		int ng15count = 0;
+		int ng16count = 0;
+	}
 
 	public static void main(String[] args) {  
-		//funReadDBParts();
+		
 	}
 	
-	public static boolean startJobFlag = true;    //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.  
-	public static boolean isReflashQTY = false;   //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.    
-    public static void funReadDBParts()
+	//Dwyane - 2019-0304
+	public WatchDogModel GetMaterialPart(String partNumber) {
+		
+		WatchDogModel dogModel = new WatchDogModel();
+		ResultSet rs = null;
+		Connection con = null;  
+	    Statement stmt = null;  
+	    
+		try {
+			String sqlStr = "SELECT materialPartNo,sn FROM LMMSBomDetail  where partNumber = '"+partNumber+"' ";
+			
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+			con = DriverManager.getConnection(connectionUrl);
+		 	stmt = con.createStatement();
+		 	rs = stmt.executeQuery(sqlStr);  
+
+			int i = 1;
+		
+			while(rs.next()) {
+				switch(i) {
+				case 1:
+					dogModel.model1name = rs.getString("materialPartNo");
+					break;
+				case 2:
+					dogModel.model2name = rs.getString("materialPartNo");
+					break;
+				case 3:
+					dogModel.model3name = rs.getString("materialPartNo");
+					break;
+				case 4:
+					dogModel.model4name = rs.getString("materialPartNo");
+					break;
+				case 5:
+					dogModel.model5name = rs.getString("materialPartNo");
+					break;
+				case 6:
+					dogModel.model6name = rs.getString("materialPartNo");
+					break;
+				case 7:
+					dogModel.model7name = rs.getString("materialPartNo");
+					break;
+				case 8:
+					dogModel.model8name = rs.getString("materialPartNo");
+					break;
+				case 9:
+					dogModel.model9name = rs.getString("materialPartNo");
+					break;
+				case 10:
+					dogModel.model10name = rs.getString("materialPartNo");
+					break;
+				case 11:
+					dogModel.model11name = rs.getString("materialPartNo");
+					break;
+				case 12:
+					dogModel.model12name = rs.getString("materialPartNo");
+					break;
+				case 13:
+					dogModel.model13name = rs.getString("materialPartNo");
+					break;
+				case 14:
+					dogModel.model14name = rs.getString("materialPartNo");
+					break;
+				case 15:
+					dogModel.model15name = rs.getString("materialPartNo");
+					break;
+				case 16:
+					dogModel.model16name = rs.getString("materialPartNo");
+					break;
+				}
+				
+				i++;
+			}
+		    
+		}
+		catch (Exception e) {  
+			e.printStackTrace();  
+		}  
+		finally {  
+			 if (rs != null) try { rs.close(); } catch(Exception e) {}  
+	         if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
+	         if (con != null) try { con.close(); } catch(Exception e) {}  
+	    }
+		
+		return dogModel;
+	}
+	
+	
+	
+	
+    
+	
+	public static void funReadDBParts()
 	{
-	      Connection con = null;  
-	      Statement stmt = null;  
-	      ResultSet rs = null;  
+		//can't assign value when counting.
+		if(LoadInspection.isCheckingResult  )
+        {
+        	return;
+        }
+		
+		Connection con = null;
+		Statement stmt = null;
+	    ResultSet rs = null;
 	      
-	      String str_light  = "";
-	      String str_camera = "";
-	      String str_power = "";
-	      
+	    try {
+	    	  
+			String str_light  = "";
+			String str_camera = "";
+			String str_power = "";
+	    	  
+	    	  
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+			con = DriverManager.getConnection(connectionUrl);  
+			
+			String SQL = "SELECT a.*, isnull( b.Lighting,'UNKNOWN') as Lighting  "; 
+			SQL += " , isnull(b.Camera,'UNKNOWN') as Camera ";
+			SQL += " , case when b.CurrentPower is null then 'UNKNOWN' else b.CurrentPower + '%' end  as CurrentPower ";
+			SQL += "  FROM LMMSWatchDog a left join LMMSBom b on a.partNumber = b.partNumber and a.machineID = b.machineID ";
+			SQL += "  WHERE a.machineID= '"+ConfigLog.machinenoSet+"' ";
+			 
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(SQL);
+			  while (rs.next()) {
+	        	 
+	        	 currentJobNumber = rs.getString("jobNumber");
+	        	 currentPartNumber = rs.getString("partNumber");
+	        	 totalQuantity = Integer.parseInt(rs.getString("totalQuantity"));
+	        	 currentTotalPass = rs.getString("totalPass");
+		         currentTotalFail = rs.getString("totalFail");
+		         newQuantity = Integer.parseInt(rs.getString("currentQuantity"));
+		         currentOperation = rs.getString("currentOperation");
+		         rmsStatus = rs.getString("rmsStatus");
+		         todayTotalQuantityFirstStart =Integer.parseInt(rs.getString("todayTotalQuantity")) ; //only machine 7 no need to +1
+		         startJobFlag = rs.getString("goodOK").equals("true")?true:false;  //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
 
-	      try {  
-	         // Establish the connection.  
-	         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	         con = DriverManager.getConnection(connectionUrl);  
-
-	         // Create and execute an SQL statement that returns some data.  
-	         String SQL = "SELECT a.*, isnull( b.Lighting,'UNKNOWN') as Lighting  "; 
-	         SQL += " , isnull(b.Camera,'UNKNOWN') as Camera ";
-	         SQL += " , case when b.CurrentPower is null then 'UNKNOWN' else b.CurrentPower + '%' end  as CurrentPower ";
-	         SQL += "  FROM LMMSWatchDog a left join LMMSBom b on a.partNumber = b.partNumber and a.machineID = b.machineID ";
-	         SQL += "  WHERE a.machineID= '"+ConfigLog.machinenoSet+"' ";
-	         stmt = con.createStatement();  
-	         //stmt = con.createStatement();  
-	         rs = stmt.executeQuery(SQL);  
-	         //stmt.executeUpdate(SQL); 
-	         // Iterate through the data in the result set and display it.  
-	         
-	         
-	         while (rs.next()) {  
-	           //System.out.println(rs.getString(1) + " " + rs.getString(2));  
-	           currentOpsDateTime = rs.getString("dateTime");
-	           currentPartNumber = rs.getString("partNumber");
-	           currentJobNumber = rs.getString("jobNumber");
-	           currentDescription = rs.getString("description");
-	           newQuantity = Integer.parseInt(rs.getString("currentQuantity"));
-	           totalQuantity = Integer.parseInt(rs.getString("totalQuantity"));
-	           currentOperation = rs.getString("currentOperation");
-	           currentPrepDateOut = rs.getString("prepDateOut");
-	           currentPrepDateIn = rs.getString("prepDateIn");
-	           currentLaserDateOut = rs.getString("laserDateOut");
-	           currentLaserDateIn = rs.getString("laserDateIn");
-	           currentProductDateOut = rs.getString("productDateOut");
-	           currentProductDateIn = rs.getString("productDateIn");
-	           currenOwnerID = rs.getString("ownerID");
-	           currentTotalPass = rs.getString("totalPass");
-	           currentTotalFail = rs.getString("totalFail");
-	           currentLastUpdated = rs.getString("lastUpdated");
-	           rmsStatus = rs.getString("rmsStatus");
-	           todayTotalQuantityFirstStart =Integer.parseInt(rs.getString("todayTotalQuantity")) ; //only machine 7 no need to +1
-	           startJobFlag = rs.getString("goodOK").equals("true")?true:false;  //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
-
-	           str_light = rs.getString("Lighting");
-	           str_camera = rs.getString("Camera");
-	           str_power = rs.getString("CurrentPower");
-	         
-	         }  
-	         
-	         
-	         if(str_light.equals("UNKNOWN")) 
-				 MainClient.lb_Light.setForeground(Color.red);
-	    	 else
-	        	 MainClient.lb_Light.setForeground(Color.white);
-        	 
-			 if(str_camera.equals("UNKNOWN")) 
-        	   MainClient.lb_Camera.setForeground(Color.red);
-			 else
-	        	 MainClient.lb_Camera.setForeground(Color.white);
-        	 
-			 if(str_power.equals("UNKNOWN") ) 
-        	   MainClient.lb_CurrentPWR.setForeground(Color.red);
-			 else
-	        	 MainClient.lb_CurrentPWR.setForeground(Color.white);
-	        	  
-	           
-	           MainClient.lb_Light.setText(str_light);
-	           MainClient.lb_Camera.setText(str_camera);
-	           MainClient.lb_CurrentPWR.setText(str_power);
-	         
-	         //System.out.println(currentPartNumber);  
-	         //2018 06 18 by wei lijia move below logic from if(runFirstTime), for the partial job. 
-	         //2018 06 19 by wei lijia add ischeckresult interlok
-	         System.out.println(" LOAD DB -- 1.1.2 LoadInspection.isCheckingResult = " + String.valueOf(LoadInspection.isCheckingResult));
-	        if(LoadInspection.isCheckingResult  )
-	        {
-	        	return;
-	        }
+		         str_light = rs.getString("Lighting");
+		         str_camera = rs.getString("Camera");
+		         str_power = rs.getString("CurrentPower");
+			  }
+			  
+			  
+			//======= job, part, process, total quantity=======//
+			MainClient.lblpartNumber.setText(currentPartNumber);
+		    MainClient.lbljobNumber.setText(currentJobNumber);
+		    MainClient.lblProcess.setText(currentOperation);
+		    MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
+		    //======= job, part, process, total quantity=======//
+		    
+		    //2018 06 18 by wei lijia move below logic from if(runFirstTime), for the partial job. 
+	        //2018 06 19 by wei lijia add ischeckresult interlok
 	        //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
-			if( startJobFlag || runFirstTime )
+		    if(startJobFlag || runFirstTime)
 	        {
 				isReflashQTY = true;
-		         LoadInspection.insTotalPass = Integer.parseInt(currentTotalPass);
-		         LoadInspection.insTotalFail = Integer.parseInt(currentTotalFail);
-		         MainClient.lblTotalPass.setText(currentTotalPass);
-		         MainClient.lblTotalFail.setText(currentTotalFail);
-		         MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
-		         LoadInspection.funGetCurrentQuantity();
-	             todayTotalQuantity = todayTotalQuantityFirstStart;
-	             System.out.println(" LOAD DB -- 1.2: isCheckingResult=FALSE; TOTAL QTY = "+ String.valueOf(todayTotalQuantity)); 
-	             isReflashQTY= false;
+		        LoadInspection.insTotalPass = Integer.parseInt(currentTotalPass);
+		        LoadInspection.insTotalFail = Integer.parseInt(currentTotalFail);
+		        MainClient.lblTotalPass.setText(currentTotalPass);
+		        MainClient.lblTotalFail.setText(currentTotalFail);
+		         
+		        currentQuantity = LoadInspection.insTotalPass + LoadInspection.insTotalFail;
+		        MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
+	            todayTotalQuantity = todayTotalQuantityFirstStart;
+	             
+	            isReflashQTY= false;
 	        }
-	        
-	         //System.out.println(currentPartNumber);  
-			
-		
-			
-	         MainClient.lblpartNumber.setText(currentPartNumber);
-	         MainClient.lbljobNumber.setText(currentJobNumber);
-	         MainClient.lblProcess.setText(currentOperation);
-	         MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
-	         
-	         MainClient.lblRMS.setText(rmsStatus);
-	         
-	         if(LoadDB.rmsStatus.equals("adjust"))
-	         {
-				MainClient.lblStat2.setText("ADJ ON");
-				MainClient.lblStat2.setBackground(new Color(0, 0, 255));
-				
-	         }
-	         else
-	         {
-	        	 MainClient.lblStat2.setText("ADJ OFF");
-				 MainClient.lblStat2.setBackground(new Color(105, 105, 105));
-	         }
-	         
-	         if(LoadDB.rmsStatus.equals("technician"))
-	         {
+		    
+			  
+		    MainClient.lblRMS.setText(rmsStatus);
+	        if(LoadDB.rmsStatus.equals("technician"))
+	        {
 	        	 if(!runTechnician)
 	        	 {
 		        	 funReadLastEvent();
 		        	 MainClient.selectTechnician();
-		        	 MainClient.lblCompleteStatus.setVisible(true);        	 
 	        	 }
-	        	 else
-	        	 {
-	        		 //MainClient.lblCompleteStatus.setVisible(false);     
-	        	 }
-	         }
-	         else
-	         {
-	        	 runTechnician = false;
-	        	 MainClient.lblCompleteStatus.setVisible(false);
-	        	 MainClient.lblCompleteStatus.setText("JOB COMPLETE!");
-	         }
-			
+	        }else {
+	        	runTechnician = false;
+	        }
+	       
+	        if(MainClient.inHelpMode == true) {
+	        	MainClient.lblCompleteStatus.setBackground(new Color(255, 0, 0));
+	        	MainClient.lblCompleteStatus.setVisible(true);
+	        }else if((LoadInspection.insTotalPass + LoadInspection.insTotalFail) >= LoadDB.totalQuantity && !MainClient.lbljobNumber.getText().equals("")) {
+	        	MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
+				MainClient.lblCompleteStatus.setText("JOB COMPLETE!");
+				MainClient.lblCompleteStatus.setVisible(true);
+	        }else if(MainClient.lbljobNumber.getText().equals("")){
+	        	MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
+	        	MainClient.lblCompleteStatus.setText("Please Scan Next Job!");
+				MainClient.lblCompleteStatus.setVisible(true);
+	        }else{
+	        	MainClient.lblCompleteStatus.setVisible(false);
+	        }
+	        
 	         
 	         if(runFirstTime)
 	         {
 	        	 currentQuantity = newQuantity;
-		         //LoadInspection.insTotalPass = Integer.parseInt(currentTotalPass);
-		         //LoadInspection.insTotalFail = Integer.parseInt(currentTotalFail);
-		         //MainClient.lblTotalPass.setText(currentTotalPass);
-		         //MainClient.lblTotalFail.setText(currentTotalFail);
-		         //MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
-		         //LoadInspection.funGetCurrentQuantity();
-		         funGraphicNameInit();
 		         runFirstTime = false;
-		         if(!runTechnician)
-		         {
-		        	 MainClient.lblCompleteStatus.setVisible(false);
-		         }
-		         //todayTotalQuantity = currentQuantity; 
-		         //MainClient.lblTotalQuantity.setText(Integer.toString(todayTotalQuantity));
 	         }
 	        
 	         
 	         MainClient.lblTotalQuantity.setText(Integer.toString(todayTotalQuantity));
 	         
-	         if(currentJobNumber.isEmpty())
-	         {
-	        	 runQty = false;
-	         }
 	         
 	         if(totalQuantity == 0)
 	         {
-	         	 if(!runQty)
-	         	 {
-	         		 if(!runTechnician)
-	         		 {
-	         			 //MainClient.lblCompleteStatus.setVisible(false);
-	         		 }
-	         		 
-	         		 //funStartQuantityChecker();
-	         		
-	         	 }
 	         	currentQuantity = 0;
 	         	LoadInspection.insTotalPass = 0;
 	         	LoadInspection.insTotalFail = 0;
 	         	MainClient.lblTotalPass.setText(currentTotalPass);
-		         MainClient.lblTotalFail.setText(currentTotalFail);
-		         MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
+		        MainClient.lblTotalFail.setText(currentTotalFail);
+		        MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
 	         }
+	         
+	        
+	         
+	         
+			//Light, Camera, CurrentPER
+			MainClient.lb_Light.setText(str_light);
+			MainClient.lb_Camera.setText(str_camera);
+			MainClient.lb_CurrentPWR.setText(str_power);
+			if(str_light.equals("UNKNOWN")) 
+				MainClient.lb_Light.setForeground(Color.red);
+			else
+				MainClient.lb_Light.setForeground(Color.white);
+			     
+			if(str_camera.equals("UNKNOWN")) 
+				MainClient.lb_Camera.setForeground(Color.red);
+			else
+				MainClient.lb_Camera.setForeground(Color.white);
+			 
+			if(str_power.equals("UNKNOWN") ) 
+				MainClient.lb_CurrentPWR.setForeground(Color.red);
+			else
+				MainClient.lb_CurrentPWR.setForeground(Color.white);
+			//Light, Camera, CurrentPER
+ 
 	      }  
 
-	      // Handle any errors that may have occurred.  
+	    
 	      catch (Exception e) {  
 	         e.printStackTrace();  
 	         MainClient.errorInfo.append("\nfunReadDBParts: " + e.getMessage());
@@ -268,37 +371,7 @@ public class LoadDB {
 	      }  
 	}
 	
-	public static void funReadLastWatchLog()
-	{
-	      Connection con = null;  
-	      Statement stmt = null;  
-	      ResultSet rs = null;  
-
-	      try {  
-	         // Establish the connection.  
-	         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	         con = DriverManager.getConnection(connectionUrl);  
-
-	         // Create and execute an SQL statement that returns some data.  
-	         String SQL = "SELECT TOP 1 id FROM LMMSWatchLog WHERE machineID='" + ConfigLog.machinenoSet + "' ORDER BY dateTime DESC";  
-	         stmt = con.createStatement();  
-	         rs = stmt.executeQuery(SQL);  
-	         while (rs.next()) {  
-	        	 productionID = rs.getString("id");
-	         }  
-	         
-	      }  
-
-	      // Handle any errors that may have occurred.  
-	      catch (Exception e) {  
-	         e.printStackTrace();  
-	      }  
-	      finally {  
-	         if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	         if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	         if (con != null) try { con.close(); } catch(Exception e) {}  
-	      }  
-	}
+	
 	
 	public static void funReadLastEvent()
 	{
@@ -335,7 +408,7 @@ public class LoadDB {
 	      }  
 	}
 	
-	public static void funUpdateLMMSEventTechnicianStart()
+	public static void funUpdateLMMSEventTechnicianStart(String sEvent)
 	{
 		Connection con = null;  
 		  Statement stmt = null;  
@@ -347,20 +420,13 @@ public class LoadDB {
 			 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 			 con = DriverManager.getConnection(connectionUrl);  
 			 
-			// 2018 02 09 by wei lijia, CHANGE TO insert function.
-				// String SQL = "UPDATE [LMMSEventLog] SET [eventTrigger]='" + eventTrigger + "', [startTime]=GETDATE(), [stopTime]=GETDATE() WHERE machineID='" + ConfigLog.machinenoSet + "' AND id=" + eventID;
-				String SQL = " insert into [LMMSEventLog]  "
-			          + " ([dateTime],[machineID],[currentOperation],[eventTrigger],[startTime],[stopTime],[ipSetting])  VALUES (" 
-					  + "  convert(date, getdate()) ,'" + ConfigLog.machinenoSet  + "','TECHNICIAN_OEE','"+eventTrigger+"',GETDATE(),GETDATE(),'NA')";
+			 String SQL = " insert into [LMMSEventLog]  ";
+			 SQL+= 	    " ([dateTime],[machineID],[currentOperation],[eventTrigger],[startTime],[stopTime],[ipSetting])  VALUES (" ;
+			 SQL+=     "  convert(date, getdate()) ,'" + ConfigLog.machinenoSet  + "','TECHNICIAN_OEE','"+sEvent+"',GETDATE(),GETDATE(),'NA')";
 				
 		 	 stmt = con.createStatement();  
-			 stmt.executeUpdate(SQL); 
-			 
-			 
-			 
-		  }  
-		
-		  // Handle any errors that may have occurred.  
+			 stmt.executeUpdate(SQL);
+		  }
 		  catch (Exception e) {  
 		     e.printStackTrace();  
 		  }  
@@ -368,8 +434,7 @@ public class LoadDB {
 		     if (rs != null) try { rs.close(); } catch(Exception e) {}  
 		     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
 		     if (con != null) try { con.close(); } catch(Exception e) {}  
-		  }  
-		
+		  }
 	}
 	
 	public static void funUpdateLMMSEventTechnicianStop()
@@ -432,58 +497,26 @@ public class LoadDB {
 		
 	}
 	
-	public static void funGraphicNameInit()
-	{
-		LoadInspection.graName[0] = "L Track X";
-		LoadInspection.graName[1] = "L Track Y";
-		LoadInspection.graName[2] = "L Seek X";
-		LoadInspection.graName[3] = "L Seek Y";
-		LoadInspection.graName[4] = "L Phone X";
-		LoadInspection.graName[5] = "L Phone Y";
-		LoadInspection.graName[6] = "R App X";
-		LoadInspection.graName[7] = "R App Y";
-		LoadInspection.graName[8] = "R Home X";
-		LoadInspection.graName[9] = "R Home Y";
-		LoadInspection.graName[10] = "R Audio X";
-		LoadInspection.graName[11] = "R Audio Y";
-		LoadInspection.graName[12] = "L Win X";
-		LoadInspection.graName[13] = "L Win Y";
-		LoadInspection.graName[14] = "R Win X";
-		LoadInspection.graName[15] = "R Win Y";
-	}
+	
 	
 	public static void funStartQuantityChecker()
 	{
-		int result = JOptionPane.showConfirmDialog(null, MainClient.myPanel2,
-	            "Manual Quantity:" + LoadDB.currentJobNumber, JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-        	if(!MainClient.quantityField.getText().isEmpty())
-        	{
-        		totalQuantity = Integer.parseInt(MainClient.quantityField.getText());
-        		currentQuantity = 0;
-        		LoadInspection.insTotalPass = 0;
-		        LoadInspection.insTotalFail = 0;
-		        MainClient.lblTotalPass.setText(currentTotalPass);
-		        MainClient.lblTotalFail.setText(currentTotalFail);
-		        MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
-				MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
-				funUpdateLMMSQuantity();
-		        runQty = true;
-        	}
-        	else
-        	{
-        		runQty = false;
-        	}
-        	
-        	//System.out.println(currentQuantity);
-//        	funUpdateLMMSQuantity();
-        	//runQty = false;
-        	//runTechnician = false;
-        }
-        else
-        {
-        	runQty = false;
-        }
+		/*
+		 * int result = JOptionPane.showConfirmDialog(null, MainClient.myPanel2,
+		 * "Manual Quantity:" + LoadDB.currentJobNumber, JOptionPane.OK_CANCEL_OPTION);
+		 * if (result == JOptionPane.OK_OPTION) {
+		 * if(!MainClient.quantityField.getText().isEmpty()) { totalQuantity =
+		 * Integer.parseInt(MainClient.quantityField.getText()); currentQuantity = 0;
+		 * LoadInspection.insTotalPass = 0; LoadInspection.insTotalFail = 0;
+		 * MainClient.lblTotalPass.setText(currentTotalPass);
+		 * MainClient.lblTotalFail.setText(currentTotalFail);
+		 * MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
+		 * MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
+		 * funUpdateLMMSQuantity(); //runQty = true; } else { runQty = false; }
+		 * 
+		 * //System.out.println(currentQuantity); // funUpdateLMMSQuantity(); //runQty =
+		 * false; //runTechnician = false; } else { runQty = false; }
+		 */
 	}
 	
 	public static void funReadDBMachineIO()
@@ -531,16 +564,16 @@ public class LoadDB {
 	         MainClient.lblAdam.setBackground(funColorSelect(adamOnline));
 	         
 	         SimpleDateFormat df = new  SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-	        System.out.println(df.format(new Date()) + "  0.                 "+ String.valueOf(LoadDB.ioValBool[6])); 
+	        //System.out.println(df.format(new Date()) + "  0.                 "+ String.valueOf(LoadDB.ioValBool[6])); 
 	 		if(LoadDB.ioValBool[6])
 			{
-	 			RunInspection.inspectReady = true;
+	 			//RunInspection.inspectReady = true;
 				MainClient.lblStat4.setBackground(new Color(0, 255, 0));
 			}
 	 		else
 	 		{
-	 			RunInspection.inspectReadyBuf = false; //2018 01 20 by Wei LiJia
-				RunInspection.inspectReady = false;
+	 			//RunInspection.inspectReadyBuf = false; //2018 01 20 by Wei LiJia
+				//RunInspection.inspectReady = false;
 				MainClient.lblStat4.setBackground(new Color(105, 105, 105));
 	 		}
 	         
@@ -568,70 +601,9 @@ public class LoadDB {
 	      }  
 	}
 	
-	public static void funUpdateLMMSQuantity()
-	{
-		Connection con = null;  
-		  Statement stmt = null;  
-		  ResultSet rs = null;  
-		  	      
-	      LoadInspection.funGetCurrentQuantity(); 
-		  
-		  try {  
-			 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			 con = DriverManager.getConnection(connectionUrl);  
-			
-			 String SQL = "UPDATE [LMMSWatchDog] SET [dateTime]=GETDATE(), [totalQuantity]=" + totalQuantity + ", [currentQuantity]=" + currentQuantity + ",[todayTotalQuantity]=" + todayTotalQuantity + " WHERE machineID='" + ConfigLog.machinenoSet + "'";
-			 stmt = con.createStatement();  
-			 stmt.executeUpdate(SQL); 
-			 
-			 
-		  }  
-		
-		  // Handle any errors that may have occurred.  
-		  catch (Exception e) {  
-		     e.printStackTrace();  
-		  }  
-		  finally {  
-		     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-		     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-		     if (con != null) try { con.close(); } catch(Exception e) {}  
-		  }  
-		  
-		  funUpdateLMMSQuantityLog();
-		
-	}
-	public static void funUpdateLMMSQuantityLog()
-	{
-		Connection con = null;  
-		  Statement stmt = null;  
-		  ResultSet rs = null;  
-		  	      
-	      LoadInspection.funGetCurrentQuantity(); 
-		  
-		  try {  
-			 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			 con = DriverManager.getConnection(connectionUrl);  
-			 
-			 String SQL = "UPDATE [LMMSWatchLog] SET [machineID]='" + ConfigLog.machinenoSet + "',[dateTime]=GETDATE(), [totalQuantity]=" + totalQuantity + ", [currentQuantity]=" + currentQuantity + " WHERE jobNumber='" + currentJobNumber + "'";
-			 stmt = con.createStatement();  
-			 stmt.executeUpdate(SQL); 
-			 
-			 MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
-			 MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
-		  }  
-		
-		  // Handle any errors that may have occurred.  
-		  catch (Exception e) {  
-		     e.printStackTrace();  
-		     MainClient.errorInfo.append("\nfunUpdateLMMSQuantity: " + e.getMessage());
-		  }  
-		  finally {  
-		     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-		     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-		     if (con != null) try { con.close(); } catch(Exception e) {}  
-		  }  
-		
-	}
+
+	
+
 	
 	public static void funUpdateLMMSStartDate()
 	{
@@ -803,33 +775,39 @@ public class LoadDB {
 		
 	}
 	
-
-	
 	public static void funSendResultLMMS()
 	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
+	  Connection con = null;
+	  Statement stmt = null;
+	  ResultSet rs = null;
 	  try {  
 		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
+		 con = DriverManager.getConnection(connectionUrl);
 		
-		 String SQL = "UPDATE LMMSClientVision SET [dateTime]=GETDATE(), passValue='" + LoadInspection.passStatus.toString() + "', failValue='" + LoadInspection.failStatus.toString() + "' WHERE jobNumber='" + currentJobNumber + "' AND partNumber='" + currentPartNumber + "' AND machineID='" + ConfigLog.machinenoSet + "'";
+		 String SQL ="";
+		 SQL += " UPDATE LMMSClientVision SET ";
+		 SQL += "  [dateTime]=GETDATE() ";
+		 //SQL += " ,passValue='" + LoadInspection.passStatus.toString() + "' ";
+		 //SQL += " ,failValue='" + LoadInspection.failStatus.toString() + "' ";
+		 SQL += " WHERE ";
+		 SQL += " jobNumber='" + currentJobNumber + "' ";
+		 SQL += " AND partNumber='" + currentPartNumber + "' ";
+		 SQL += " AND machineID='" + ConfigLog.machinenoSet + "' ";
+		 
+		 
 		 stmt = con.createStatement();  
 		 stmt.executeUpdate(SQL); 
 		 
-	  }  
-	
-	  // Handle any errors that may have occurred.  
+	  }
 	  catch (Exception e) {  
 	     e.printStackTrace();  
 	     MainClient.errorInfo.append("\nfunSendResultLMMS: " + e.getMessage());
-	  }  
-	  finally {  
+	  }
+	  finally {
 	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
 	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
+	  }
 	}
 	
 	public static void funSendCountPassLMMS()
@@ -863,36 +841,106 @@ public class LoadDB {
 	}
 	
 	//2018 06 28 added by wei lijia for Machine 6+7
-	public static void funSendCountPassAndFailLMMS()
+	public static void funSendCountPassAndFailLMMS(LoadDB.WatchDogModel dogModel)
 	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.  
-		 String SQL = "UPDATE [LMMSWatchDog] SET [goodOK] ='false' , [dateTime]=getdate(),[currentQuantity]=" + LoadDB.currentQuantity + ",[totalQuantity]=" + LoadDB.totalQuantity  + ", [totalPass]=" + LoadInspection.insTotalPass + ", [totalFail]=" + LoadInspection.insTotalFail + ",[todayTotalQuantity]=" + todayTotalQuantity + ",[todayOKTotalQuantity]=" + todayOKTotalQuantity + ",[todayNGTotalQuantity]=" + todayNGTotalQuantity + " WHERE jobNumber='" + currentJobNumber + "' AND partNumber='" + currentPartNumber + "' AND machineID='" + ConfigLog.machinenoSet + "'";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		 
-	  }  
+		CommonFunc.writeLogFile("==Debug Counting==   4.1 In Func funSendCountPassAndFailLMMS");
+		Connection con = null;  
+		Statement stmt = null;  
+		ResultSet rs = null;  
+		try {
+			 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+			 con = DriverManager.getConnection(connectionUrl);  
+			
+			 
+			 String SQL = "";
+			 SQL += " UPDATE [LMMSWatchDog] SET "; 
+			 SQL += "  [goodOK] ='false' "; 
+			 SQL += " ,[dateTime]=getdate() "; 
+			 SQL += " ,[currentQuantity]="+LoadDB.currentQuantity+" "; 
+			 SQL += " ,[totalQuantity]= " + LoadDB.totalQuantity  + " "; 
+			 SQL += " ,[totalPass]= " + LoadInspection.insTotalPass + " "; 
+			 SQL += " ,[totalFail]= " + LoadInspection.insTotalFail + " "; 
+			 SQL += " ,[todayTotalQuantity]= " + todayTotalQuantity + " "; 
+			 SQL += " ,[todayOKTotalQuantity]= " + todayOKTotalQuantity + " "; 
+			 SQL += " ,[todayNGTotalQuantity]= " + todayNGTotalQuantity + " ";
+			 
+			 
+			 SQL += ", model1Name = '" + dogModel.model1name + "'";
+			 SQL += ", model2Name = '" + dogModel.model2name + "'";
+			 SQL += ", model3Name = '" + dogModel.model3name + "'";
+			 SQL += ", model4Name = '" + dogModel.model4name + "'";
+			 SQL += ", model5Name = '" + dogModel.model5name + "'";
+			 SQL += ", model6Name = '" + dogModel.model6name + "'";
+			 SQL += ", model7Name = '" + dogModel.model7name + "'";
+			 SQL += ", model8Name = '" + dogModel.model8name + "'";
+			 SQL += ", model9Name = '" + dogModel.model9name + "'";
+			 SQL += ", model10Name = '" + dogModel.model10name + "'";
+			 SQL += ", model11Name = '" + dogModel.model11name + "'";
+			 SQL += ", model12Name = '" + dogModel.model12name + "'";
+			 SQL += ", model13Name = '" + dogModel.model13name + "'";
+			 SQL += ", model14Name = '" + dogModel.model14name + "'";
+			 SQL += ", model15Name = '" + dogModel.model15name + "'";
+			 SQL += ", model16Name = '" + dogModel.model16name + "'";
+			 SQL += ", ok1Count = " + Integer.toString(Math.abs(dogModel.ok1count));
+			 SQL += ", ok2Count = " + Integer.toString(Math.abs(dogModel.ok2count));
+			 SQL += ", ok3Count = " + Integer.toString(Math.abs(dogModel.ok3count));
+			 SQL += ", ok4Count = " + Integer.toString(Math.abs(dogModel.ok4count));
+			 SQL += ", ok5Count = " + Integer.toString(Math.abs(dogModel.ok5count));
+			 SQL += ", ok6Count = " + Integer.toString(Math.abs(dogModel.ok6count));
+			 SQL += ", ok7Count = " + Integer.toString(Math.abs(dogModel.ok7count));
+			 SQL += ", ok8Count = " + Integer.toString(Math.abs(dogModel.ok8count));
+			 SQL += ", ok9Count = " + Integer.toString(Math.abs(dogModel.ok9count));
+			 SQL += ", ok10Count = " + Integer.toString(Math.abs(dogModel.ok10count));
+			 SQL += ", ok11Count = " + Integer.toString(Math.abs(dogModel.ok11count));
+			 SQL += ", ok12Count = " + Integer.toString(Math.abs(dogModel.ok12count));
+			 SQL += ", ok13Count = " + Integer.toString(Math.abs(dogModel.ok13count));
+			 SQL += ", ok14Count = " + Integer.toString(Math.abs(dogModel.ok14count));
+			 SQL += ", ok15Count = " + Integer.toString(Math.abs(dogModel.ok15count));
+			 SQL += ", ok16Count = " + Integer.toString(Math.abs(dogModel.ok16count));
+			 SQL += ", ng1Count = " + Integer.toString(Math.abs(dogModel.ng1count));
+			 SQL += ", ng2Count = " + Integer.toString(Math.abs(dogModel.ng2count));
+			 SQL += ", ng3Count = " + Integer.toString(Math.abs(dogModel.ng3count));
+			 SQL += ", ng4Count = " + Integer.toString(Math.abs(dogModel.ng4count));
+			 SQL += ", ng5Count = " + Integer.toString(Math.abs(dogModel.ng5count));
+			 SQL += ", ng6Count = " + Integer.toString(Math.abs(dogModel.ng6count));
+			 SQL += ", ng7Count = " + Integer.toString(Math.abs(dogModel.ng7count));
+			 SQL += ", ng8Count = " + Integer.toString(Math.abs(dogModel.ng8count));
+			 SQL +=	", ng9Count = " + Integer.toString(Math.abs(dogModel.ng9count));
+			 SQL += ", ng10Count = " + Integer.toString(Math.abs(dogModel.ng10count));
+			 SQL += ", ng11Count = " + Integer.toString(Math.abs(dogModel.ng11count));
+			 SQL += ", ng12Count = " + Integer.toString(Math.abs(dogModel.ng12count));
+			 SQL += ", ng13Count = " + Integer.toString(Math.abs(dogModel.ng13count));
+			 SQL += ", ng14Count = " + Integer.toString(Math.abs(dogModel.ng14count));
+			 SQL += ", ng15Count = " + Integer.toString(Math.abs(dogModel.ng15count));
+			 SQL += ", ng16Count = " + Integer.toString(Math.abs(dogModel.ng16count));
+			 
+			 
+			 
+			 SQL += " WHERE ";
+			 SQL += " jobNumber='" + currentJobNumber + "' ";
+			 SQL += " AND partNumber='" + currentPartNumber + "' ";
+			 SQL += " AND machineID='" + ConfigLog.machinenoSet + "' ";
 	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	     MainClient.errorInfo.append("\nfunSendCountPassAndFailLMMS: " + e.getMessage());
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	  funSendCountPassAndFailLMMSLog();
+			 
+			 stmt = con.createStatement();  
+			 stmt.executeUpdate(SQL);
+		}
+		catch (Exception e) {  
+		     e.printStackTrace();  
+		     MainClient.errorInfo.append("\nfunSendCountPassAndFailLMMS: " + e.getMessage());
+		}  
+		finally {  
+		     if (rs != null) try { rs.close(); } catch(Exception e) {}
+		     if (stmt != null) try { stmt.close(); } catch(Exception e) {}
+		     if (con != null) try { con.close(); } catch(Exception e) {}
+		}  
+			funSendCountPassAndFailLMMSLog(dogModel);
 	}
+	
+	
+	
 	//2018 06 28 added by wei lijia for Machine 6+7
-	public static void funSendCountPassAndFailLMMSLog()
+	public static void funSendCountPassAndFailLMMSLog(LoadDB.WatchDogModel dogModel)
 	{
 	  Connection con = null;  
 	  Statement stmt = null;  
@@ -901,10 +949,70 @@ public class LoadDB {
 		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 		 con = DriverManager.getConnection(connectionUrl);  
 		
-		 String SQL = "UPDATE [LMMSWatchLog] SET [machineID]='" + ConfigLog.machinenoSet + "', [dateTime]=GETDATE(),[currentQuantity]=" + LoadDB.currentQuantity + ",[totalQuantity]=" + LoadDB.totalQuantity  + ",  [totalPass]=" + LoadInspection.insTotalPass +  ", [totalFail]=" + LoadInspection.insTotalFail + " WHERE jobNumber='" + currentJobNumber + "'" ;
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
+		 String SQL = "";
+		 SQL += " UPDATE [LMMSWatchLog] SET ";
+		 SQL += "  [machineID]='" + ConfigLog.machinenoSet + "' ";
+		 SQL += " ,[dateTime]=GETDATE() ";
+		 SQL += " ,[currentQuantity]=" + LoadDB.currentQuantity + " ";
+		 SQL += " ,[totalQuantity]=" + LoadDB.totalQuantity  + " ";
+		 SQL += " ,[totalPass]=" + LoadInspection.insTotalPass + " ";
+		 SQL += " ,[totalFail]=" + LoadInspection.insTotalFail + " ";
 		 
+		 SQL += ", model1Name = '" + dogModel.model1name + "'";
+		 SQL += ", model2Name = '" + dogModel.model2name + "'";
+		 SQL += ", model3Name = '" + dogModel.model3name + "'";
+		 SQL += ", model4Name = '" + dogModel.model4name + "'";
+		 SQL += ", model5Name = '" + dogModel.model5name + "'";
+		 SQL += ", model6Name = '" + dogModel.model6name + "'";
+		 SQL += ", model7Name = '" + dogModel.model7name + "'";
+		 SQL += ", model8Name = '" + dogModel.model8name + "'";
+		 SQL += ", model9Name = '" + dogModel.model9name + "'";
+		 SQL += ", model10Name = '" + dogModel.model10name + "'";
+		 SQL += ", model11Name = '" + dogModel.model11name + "'";
+		 SQL += ", model12Name = '" + dogModel.model12name + "'";
+		 SQL += ", model13Name = '" + dogModel.model13name + "'";
+		 SQL += ", model14Name = '" + dogModel.model14name + "'";
+		 SQL += ", model15Name = '" + dogModel.model15name + "'";
+		 SQL += ", model16Name = '" + dogModel.model16name + "'";
+		 SQL += ", ok1Count = " + Integer.toString(Math.abs(dogModel.ok1count));
+		 SQL += ", ok2Count = " + Integer.toString(Math.abs(dogModel.ok2count));
+		 SQL += ", ok3Count = " + Integer.toString(Math.abs(dogModel.ok3count));
+		 SQL += ", ok4Count = " + Integer.toString(Math.abs(dogModel.ok4count));
+		 SQL += ", ok5Count = " + Integer.toString(Math.abs(dogModel.ok5count));
+		 SQL += ", ok6Count = " + Integer.toString(Math.abs(dogModel.ok6count));
+		 SQL += ", ok7Count = " + Integer.toString(Math.abs(dogModel.ok7count));
+		 SQL += ", ok8Count = " + Integer.toString(Math.abs(dogModel.ok8count));
+		 SQL += ", ok9Count = " + Integer.toString(Math.abs(dogModel.ok9count));
+		 SQL += ", ok10Count = " + Integer.toString(Math.abs(dogModel.ok10count));
+		 SQL += ", ok11Count = " + Integer.toString(Math.abs(dogModel.ok11count));
+		 SQL += ", ok12Count = " + Integer.toString(Math.abs(dogModel.ok12count));
+		 SQL += ", ok13Count = " + Integer.toString(Math.abs(dogModel.ok13count));
+		 SQL += ", ok14Count = " + Integer.toString(Math.abs(dogModel.ok14count));
+		 SQL += ", ok15Count = " + Integer.toString(Math.abs(dogModel.ok15count));
+		 SQL += ", ok16Count = " + Integer.toString(Math.abs(dogModel.ok16count));
+		 SQL += ", ng1Count = " + Integer.toString(Math.abs(dogModel.ng1count));
+		 SQL += ", ng2Count = " + Integer.toString(Math.abs(dogModel.ng2count));
+		 SQL += ", ng3Count = " + Integer.toString(Math.abs(dogModel.ng3count));
+		 SQL += ", ng4Count = " + Integer.toString(Math.abs(dogModel.ng4count));
+		 SQL += ", ng5Count = " + Integer.toString(Math.abs(dogModel.ng5count));
+		 SQL += ", ng6Count = " + Integer.toString(Math.abs(dogModel.ng6count));
+		 SQL += ", ng7Count = " + Integer.toString(Math.abs(dogModel.ng7count));
+		 SQL += ", ng8Count = " + Integer.toString(Math.abs(dogModel.ng8count));
+		 SQL +=	", ng9Count = " + Integer.toString(Math.abs(dogModel.ng9count));
+		 SQL += ", ng10Count = " + Integer.toString(Math.abs(dogModel.ng10count));
+		 SQL += ", ng11Count = " + Integer.toString(Math.abs(dogModel.ng11count));
+		 SQL += ", ng12Count = " + Integer.toString(Math.abs(dogModel.ng12count));
+		 SQL += ", ng13Count = " + Integer.toString(Math.abs(dogModel.ng13count));
+		 SQL += ", ng14Count = " + Integer.toString(Math.abs(dogModel.ng14count));
+		 SQL += ", ng15Count = " + Integer.toString(Math.abs(dogModel.ng15count));
+		 SQL += ", ng16Count = " + Integer.toString(Math.abs(dogModel.ng16count));
+		
+		 SQL += " WHERE  ";
+		 SQL += " jobNumber='" + currentJobNumber + "' ";
+		
+		 
+		 stmt = con.createStatement();  
+		 stmt.executeUpdate(SQL);
 	  }  
 	
 	  // Handle any errors that may have occurred.  
@@ -1003,61 +1111,7 @@ public class LoadDB {
 	}
 	
 	
-	public static void funSQLUpdate(String query)
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
 	
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		 String SQL = query;
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		 
-	  }  
-	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	     MainClient.errorInfo.append("\nfunSQLUpdate: " + e.getMessage());
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	}
-	
-	public static void funSendInspectLMMS()
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-	
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		 String SQL = "UPDATE LMMSClientVision SET inspectOk='" + LoadInspection.inspectAvai.toString() + "' WHERE partNumber='" + currentPartNumber + "' AND machineID='" + ConfigLog.machinenoSet + "'";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		 
-	  }  
-	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	     MainClient.errorInfo.append("\nfunSendInspectLMMS: " + e.getMessage());
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	}
 	
 	public static void funSendStartVisionLMMS()
 	{
@@ -1075,7 +1129,7 @@ public class LoadDB {
 		 
 	  }  
 	
-	  // Handle any errors that may have occurred.  
+	  // Handle any errors that may have occurred.
 	  catch (Exception e) {  
 	     e.printStackTrace();  
 	     MainClient.errorInfo.append("\nfunSendStartVisionLMMS: " + e.getMessage());
@@ -1085,6 +1139,7 @@ public class LoadDB {
 	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
 	  }  
+	  
 	  funSendStartVisionLMMSLog();
 	}
 	
@@ -1115,37 +1170,7 @@ public class LoadDB {
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
 	  }  
 	}
-	//2018 01 24 by wei lijia for decrease counting case
-	public static void funStatusLog(String pn1, String pn2,String pn3, String pn4,String pn5, String pn6,String pn7, String pn8,String pn9, String pn10,String pn11, String pn12,String pn13, String pn14, String pn15, String pn16
-			,String pv1, String pv2,String pv3, String pv4,String pv5, String pv6,String pv7, String pv8,String pv9, String pv10,String pv11, String pv12,String pv13, String pv14, String pv15, String pv16)
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-
-	  
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		 String SQL = "insert into LMMSStatus_His  ( [id] ,[updatedtime] ,[TransType],[machineID]  ,[inName1] ,[inName2],[inName3] ,[inName4] ,[inName5] ,[inName6],[inName7]  ,[inName8],[inName9],[inName10] ,[inName11] ,[inName12] ,[inName13] ,[inName14],[inName15] ,[inName16]  "
-				 +" ,[inVal1],[inVal2] ,[inVal3] ,[inVal4],[inVal5] ,[inVal6] ,[inVal7] ,[inVal8],[inVal9],[inVal10] ,[inVal11] ,[inVal12],[inVal13] ,[inVal14] ,[inVal15] ,[inVal16]  ) " 
-		         + " values ( '100' ,GETDATE(),'LOG','8','" + pn1 + "' ,'" + pn2 + "','" + pn3 + "','" + pn4 + "' ,'" + pn5 + "','" + pn6 + "'  ,'" + pn7 + "'  ,'" + pn8 + "' ,'" + pn9 + "'  ,'" + pn10 + "'  ,'" + pn11 + "'   ,'" + pn12 + "' ,'" + pn13 + "' ,'" + pn14 + "'  ,'" + pn15 + "'  ,'" + pn16 + "'  " 
-		         + " ,'" + pv1 + "'  ,'" + pv2 + "'  ,'" + pv3 + "' ,'" + pv4 + "'  ,'" + pv5 + "'  ,'" + pv6 + "' ,'" + pv7 + "'  ,'" + pv8 + "'  ,'" + pv9 + "' ,'" + pv10 + "'  ,'" + pv11 + "'   ,'" + pv12 + "'  ,'" + pv13 + "' ,'" + pv14 + "'  ,'" + pv15 + "'  ,'" + pv16 + "' ) ";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-	      }
-		  // Handle any errors that may have occurred.  
-		  catch (Exception e) {  
-		     e.printStackTrace();  
-		     MainClient.errorInfo.append("\funStatusLog: " + e.getMessage());
-		  }  
-		  finally {  
-		     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-		     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-		     if (con != null) try { con.close(); } catch(Exception e) {}  
-		  }  
-	  }  
+	
 	public static void funSendCompleteLMMS()
 	{
 	  Connection con = null;  
@@ -1204,31 +1229,5 @@ public class LoadDB {
 	  }  
 	}
 	
-	public static void funUpdateRMSWatchdog()
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-
-	  
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		 String SQL = "UPDATE LMMSWatchDog SET [rmsStatus]='runinspect' WHERE machineID='" + ConfigLog.machinenoSet + "'";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		 
-	  }  
 	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	}
 }

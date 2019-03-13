@@ -67,23 +67,25 @@ public class ConfigLog {
 			readingFilePath = prop.getProperty("readingFilePath");
 			backupPath = prop.getProperty("backupPath");
 
-			MainClient.machinenoField.setText(machinenoSet);
-			MainClient.connectionstrField.setText(connectionstrSet);
-			MainClient.serverdirField.setText(serverdirSet);
-			MainClient.visiondirField.setText(visiondirSet);
-			MainClient.visionloadField.setText(visionloadSet);
-			MainClient.selectmodelField.setText(selectmodelSet);
-			MainClient.windowmodelField.setText(windowmodelSet);
-			MainClient.selectpartmodelField.setText(selectpartmodelSet);
-			MainClient.clickokmodelField.setText(clickokmodelSet);
-			MainClient.menuvisionField.setText(menuvisionSet);
-			MainClient.runenableField.setText(runenableSet);
-			MainClient.passiconField.setText(passiconSet);
-			MainClient.failiconField.setText(failiconSet);
-			MainClient.inspectiontextField.setText(inspectiontextSet);
-			MainClient.passpointField.setText(passpointSet);
-			MainClient.failpointField.setText(failpointSet);
-			MainClient.resetpartField.setText(resetpointSet);
+			/*
+			 * MainClient.machinenoField.setText(machinenoSet);
+			 * MainClient.connectionstrField.setText(connectionstrSet);
+			 * MainClient.serverdirField.setText(serverdirSet);
+			 * MainClient.visiondirField.setText(visiondirSet);
+			 * MainClient.visionloadField.setText(visionloadSet);
+			 * MainClient.selectmodelField.setText(selectmodelSet);
+			 * MainClient.windowmodelField.setText(windowmodelSet);
+			 * MainClient.selectpartmodelField.setText(selectpartmodelSet);
+			 * MainClient.clickokmodelField.setText(clickokmodelSet);
+			 * MainClient.menuvisionField.setText(menuvisionSet);
+			 * MainClient.runenableField.setText(runenableSet);
+			 * MainClient.passiconField.setText(passiconSet);
+			 * MainClient.failiconField.setText(failiconSet);
+			 * MainClient.inspectiontextField.setText(inspectiontextSet);
+			 * MainClient.passpointField.setText(passpointSet);
+			 * MainClient.failpointField.setText(failpointSet);
+			 * MainClient.resetpartField.setText(resetpointSet);
+			 */
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
