@@ -129,7 +129,7 @@ public class LoadDB {
 	    Statement stmt = null;  
 	    
 		try {
-			String sqlStr = "SELECT materialPartNo,sn FROM LMMSBomDetail  where partNumber = '"+partNumber+"' ";
+			String sqlStr = "SELECT sn, materialPartNo FROM LMMSBomDetail  where partNumber = '"+partNumber+"' order by sn ";
 			
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 			con = DriverManager.getConnection(connectionUrl);

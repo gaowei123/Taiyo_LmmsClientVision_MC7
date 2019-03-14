@@ -45,7 +45,7 @@ public class LoadInspection {
 	public static boolean isCheckingResult = false;
 	
 	
-	//dwyane 2019-0308  for logic,file reading & counting 
+	//dwyane 2019-0308  for logic: file reading & counting 
 	public class Tray{
 		List<Jig> jigList = new ArrayList<>();
 		
@@ -87,6 +87,7 @@ public class LoadInspection {
 			for(Button btn :buttonList) {
 				if(btn.btnName.equals(btnName)) {
 					result = true;
+					break;
 				}
 			}
 			return result;
@@ -97,7 +98,7 @@ public class LoadInspection {
 			
 			for(Button temp :buttonList) {
 				if(temp.btnName.equals(btnName)) {
-					btn = temp;
+					btn = temp;  //find but not break out ,  to get lastest btn
 				}
 			}
 			
@@ -107,8 +108,27 @@ public class LoadInspection {
 	}
 	
 	public class Button{
+		
 		String btnName = "";
-		List<Boolean> markResultList = new ArrayList<>();
+		
+		List<MarkInfo> markList = new ArrayList<>();
+		
+		public Boolean findMark(String markName) {
+			Boolean result = false;
+			for(MarkInfo mark :markList) {
+				if(mark.markName.equals(markName)) {
+					result = true;
+				}
+			}
+			
+			return result;
+		}
+		
+	}
+	
+	public class MarkInfo{
+		String markName = "";
+		Boolean markResult  = false;
 	}
 	
 	public class MaterialResult{
@@ -116,7 +136,7 @@ public class LoadInspection {
 		int Pass = 0;
 		int Fail = 0;
 	}
-	//dwyane 2019-0308  for logic,file reading & counting 
+	//dwyane 2019-0308  for logic: file reading & counting 
 	
 	
 	public static void funCounting()  throws IOException, InterruptedException
@@ -136,7 +156,7 @@ public class LoadInspection {
 		//1.0 Get file 
 	 	File countingFile = GetFile();
 	 	if(countingFile== null) {
-	 		CommonFunc.writeLogFile("==Debug Counting==   1.0 Get file, No file found!");
+	 		//CommonFunc.writeLogFile("==Debug Counting==   1.0 Get file, No file found!");
 	 		return ;
 	 	}
 	 	CommonFunc.writeLogFile("==Debug Counting==   1.0 Get file, file name: "+countingFile.getName());
@@ -214,6 +234,7 @@ public class LoadInspection {
 			String strLine = buffer.readLine();
 			while(strLine != null) {
 				
+				//check format
 				if(strLine.equals("")) {
 					strLine = buffer.readLine();
 					continue;
@@ -233,17 +254,25 @@ public class LoadInspection {
 					CommonFunc.writeLogFile("==Debug Counting==   2.2.2 Label Name error value:"+labelName);
 					return null;
 				}
+				//check format
 				
+				
+				//get jig, button, mark  name   & mark result
 				String jigName = arrLabelName[0];
 				String btnName = arrLabelName[1];
+				String markName = arrLabelName[2];
 				String strMarkResult =arrStrLine[3];
-				Boolean markResult = false;
 				
-				//machine6,8 PASS    machine7 OK
-				if(strMarkResult.equals("Pass") || strMarkResult.equals("OK") || strMarkResult.equals("PASS"))
+				
+				//current mark info
+				MarkInfo mark = new LoadInspection().new MarkInfo();
+				mark.markName = markName;
+				if(strMarkResult.equals("Pass") || strMarkResult.equals("OK") || strMarkResult.equals("PASS"))//machine6,8 PASS    machine7 OK
 				{
-					markResult = true;
+					mark.markResult = true;
 				}
+				//current mark info 
+				
 						
 				if(tray.findJig(jigName)) {
 					CommonFunc.writeLogFile("==Debug Counting==   2.3.1  Has Jig : "+jigName);
@@ -253,22 +282,32 @@ public class LoadInspection {
 						CommonFunc.writeLogFile("==Debug Counting==   2.3.2  Has button : "+btnName);
 						Button btn = jig.getBtn(btnName);
 						
-						btn.markResultList.add(markResult);
+						if(btn.findMark(markName)) {
+							CommonFunc.writeLogFile("==Debug Counting==   2.3.3  Has mark : "+markName+", created new button");
+							Button newBtn = new LoadInspection().new Button();
+							newBtn.btnName = btnName;
+							newBtn.markList.add(mark);
+							
+							jig.buttonList.add(newBtn);
+						}else {
+							CommonFunc.writeLogFile("==Debug Counting==   2.3.3  Hasn't mark : "+markName+", add it");
+							btn.markList.add(mark);
+						}
 						
 					}else {
-						CommonFunc.writeLogFile("==Debug Counting==   2.3.2  Hasn't button : "+btnName+", created new");
+						CommonFunc.writeLogFile("==Debug Counting==   2.3.2  Hasn't button : "+btnName+", created new button");
 						Button newBtn = new LoadInspection().new Button();
 						newBtn.btnName=btnName;
-						newBtn.markResultList.add(markResult);
+						newBtn.markList.add(mark);
 						
 						jig.buttonList.add(newBtn);
 					}
 					
 				}else{
-					CommonFunc.writeLogFile("==Debug Counting==   2.3.1  Hasn't Jig : "+jigName+", created new");
+					CommonFunc.writeLogFile("==Debug Counting==   2.3.1  Hasn't Jig : "+jigName+", created new jig & button");
 					Button newBtn = new LoadInspection().new Button();
 					newBtn.btnName = btnName;
-					newBtn.markResultList.add(markResult);
+					newBtn.markList.add(mark);
 					
 					
 					Jig newJig = new LoadInspection().new Jig();
@@ -294,8 +333,8 @@ public class LoadInspection {
 						MaterialResult material = getMaterial(listMaterial,btn.btnName);
 						
 						Boolean btnStatus = true;
-						for(Boolean markResult :btn.markResultList) {
-							if(markResult && btnStatus) {
+						for(MarkInfo mark :btn.markList) {
+							if(mark.markResult && btnStatus) {
 								btnStatus = true;
 							}else{
 								btnStatus = false;
@@ -312,8 +351,8 @@ public class LoadInspection {
 						material.name=btn.btnName;
 						
 						Boolean btnStatus = true;
-						for(Boolean markResult :btn.markResultList) {
-							if(markResult && btnStatus) {
+						for(MarkInfo mark :btn.markList) {
+							if(mark.markResult && btnStatus) {
 								btnStatus = true;
 							}else{
 								btnStatus = false;
