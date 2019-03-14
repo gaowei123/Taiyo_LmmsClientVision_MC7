@@ -76,9 +76,6 @@ public class RunInspection implements Runnable{
 	{
 		if((LoadInspection.insTotalPass + LoadInspection.insTotalFail) >= LoadDB.totalQuantity)
 		{
-			//MainClient.lblCompleteStatus.setBackground(new Color(181, 230, 29));
-			//MainClient.lblCompleteStatus.setText("JOB COMPLETE!");
-			
 			if(startNew)
 			{
 				startNew = false;

@@ -139,6 +139,9 @@ public class LoadInspection {
 	//dwyane 2019-0308  for logic: file reading & counting 
 	
 	
+	
+	
+	
 	public static void funCounting()  throws IOException, InterruptedException
 	{
 		CommonFunc.writeLogFile("==Debug Counting==   In Func  funCounting()");
@@ -167,7 +170,7 @@ public class LoadInspection {
 	 	
 	 	
 	 	
-	 	//2.0 Start to counting 
+	 	//2.0  **Core Logic**  Start to counting 
 	 	CommonFunc.writeLogFile("==Debug Counting==   2.0 Start to counting ");
 	 	LoadDB.WatchDogModel dogModel =new LoadDB().new WatchDogModel();
 	 	dogModel = countingResult(BufferRead);
@@ -198,6 +201,8 @@ public class LoadInspection {
 	
 	
 	
+	
+	
 	//===== dwyane Step-01 Get counting file =====//
 	public static File GetFile() {
 	
@@ -219,7 +224,7 @@ public class LoadInspection {
 		return LatestFile;
 	}
 	
-	//===== dwyane Step-02 Counting =====//
+	//===== dwyane Step-02 **Core Logic**  Counting =====//
 	public static LoadDB.WatchDogModel countingResult(BufferedReader buffer){
 		
 		CommonFunc.writeLogFile("==Debug Counting==   2.1 In Func countingResult  &  Start Setting Tray");
@@ -257,23 +262,20 @@ public class LoadInspection {
 				//check format
 				
 				
-				//get jig, button, mark  name   & mark result
+				//get jig, button, mark info
 				String jigName = arrLabelName[0];
 				String btnName = arrLabelName[1];
 				String markName = arrLabelName[2];
 				String strMarkResult =arrStrLine[3];
-				
-				
-				//current mark info
 				MarkInfo mark = new LoadInspection().new MarkInfo();
 				mark.markName = markName;
 				if(strMarkResult.equals("Pass") || strMarkResult.equals("OK") || strMarkResult.equals("PASS"))//machine6,8 PASS    machine7 OK
 				{
 					mark.markResult = true;
 				}
-				//current mark info 
 				
-						
+				
+				// Set tray info
 				if(tray.findJig(jigName)) {
 					CommonFunc.writeLogFile("==Debug Counting==   2.3.1  Has Jig : "+jigName);
 					Jig jig = tray.getJig(jigName);
@@ -302,7 +304,6 @@ public class LoadInspection {
 						
 						jig.buttonList.add(newBtn);
 					}
-					
 				}else{
 					CommonFunc.writeLogFile("==Debug Counting==   2.3.1  Hasn't Jig : "+jigName+", created new jig & button");
 					Button newBtn = new LoadInspection().new Button();
@@ -371,7 +372,7 @@ public class LoadInspection {
 			}
 			
 			
-			
+			//Get material part no in watchdog model
 			LoadDB ldb = new LoadDB();
 			String partNumber = MainClient.lblpartNumber.getText();
 			if(!partNumber.equals("")) {
@@ -383,7 +384,7 @@ public class LoadInspection {
 			}
 			
 			//set model 1-16 name, ok 1-16 count, ng 1-16 count
-			for (int i = 0 ; i < listMaterial.size() ; i++) { 
+			for (int i = 0 ; i < listMaterial.size() ; i++) {
 				switch (i+1){
 					case 1:
 						dogModel.ok1count =listMaterial.get(i).Pass;
@@ -540,6 +541,7 @@ public class LoadInspection {
     	
 		LoadDB.funSendCountPassAndFailLMMS(dogModel);
 	}
+	
 	
 	
 	
