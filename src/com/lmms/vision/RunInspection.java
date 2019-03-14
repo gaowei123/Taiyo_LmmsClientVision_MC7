@@ -58,7 +58,7 @@ public class RunInspection implements Runnable{
 				LoadInspection.funCounting();
 				LoadInspection.isCheckingResult = false;
 			}
-		} 
+		}
 		catch (IOException e) { 
 			LoadInspection.isCheckingResult = false;
 		} catch (InterruptedException e) {

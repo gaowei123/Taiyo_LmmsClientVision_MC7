@@ -322,6 +322,10 @@ public class LoadInspection {
 			}
 			
 			
+			//update the jig status UI.
+			funUpdateJigUI(tray);
+			
+			
 			//foreach the Tray, put the result in listMaterial
 			List<MaterialResult> listMaterial = new ArrayList<>();
 			
@@ -515,25 +519,25 @@ public class LoadInspection {
 		MainClient.lblStat4.setBackground(new Color(105, 105, 105));
 		//MainClient.lblstatPass.setBackground(new Color(105, 105, 105));
 		//MainClient.lblstatFail.setBackground(new Color(105, 105, 105));
+	}
+	public static void funUpdateJigUI(Tray tray ) {
 		
-		
-		setColorForlbJig(MainClient.lblJStat1,dogModel.ok1count,dogModel.ng1count,1);
-		setColorForlbJig(MainClient.lblJStat2,dogModel.ok2count,dogModel.ng2count,2);
-		setColorForlbJig(MainClient.lblJStat3,dogModel.ok3count,dogModel.ng3count,3);
-		setColorForlbJig(MainClient.lblJStat4,dogModel.ok4count,dogModel.ng4count,4);
-		setColorForlbJig(MainClient.lblJStat5,dogModel.ok5count,dogModel.ng5count,5);
-		setColorForlbJig(MainClient.lblJStat6,dogModel.ok6count,dogModel.ng6count,6);
-		setColorForlbJig(MainClient.lblJStat7,dogModel.ok7count,dogModel.ng7count,7);
-		setColorForlbJig(MainClient.lblJStat8,dogModel.ok8count,dogModel.ng8count,8);
-		setColorForlbJig(MainClient.lblJStat9,dogModel.ok9count,dogModel.ng9count,9);
-		setColorForlbJig(MainClient.lblJStat10,dogModel.ok10count,dogModel.ng10count,10);
-		setColorForlbJig(MainClient.lblJStat11,dogModel.ok11count,dogModel.ng11count,11);
-		setColorForlbJig(MainClient.lblJStat12,dogModel.ok12count,dogModel.ng12count,12);
-		setColorForlbJig(MainClient.lblJStat13,dogModel.ok13count,dogModel.ng13count,13);
-		setColorForlbJig(MainClient.lblJStat14,dogModel.ok14count,dogModel.ng14count,14);
-		setColorForlbJig(MainClient.lblJStat15,dogModel.ok15count,dogModel.ng15count,15);
-		setColorForlbJig(MainClient.lblJStat16,dogModel.ok16count,dogModel.ng16count,16);
-		
+    	List<Jig> jigList = new ArrayList<>();
+    	
+    	for(Jig jig : tray.jigList) {
+    		jigList.add(jig);
+    	}
+    	
+    	for(int i = 0; i<16- tray.jigList.size();i++) {
+    		jigList.add(null);
+    	}
+    	
+		int sn = 1;
+    	for(Jig jig : jigList) {
+    		
+    		setColorForlbJig(jig,sn);
+    		sn++;
+    	}
 	}
 	
 	//===== dwyane Step-04 Updated DB watchdog & watchlog =====//
@@ -541,7 +545,6 @@ public class LoadInspection {
     	
 		LoadDB.funSendCountPassAndFailLMMS(dogModel);
 	}
-	
 	
 	
 	
@@ -580,22 +583,95 @@ public class LoadInspection {
 		return material;
 	}
 	
-	public static void setColorForlbJig(java.awt.Label lb , int Pass,int Fail, int jigNo) {
+	public static void setColorForlbJig(Jig jig, int sn) {
 		
-		String jigStatus ="J"+ Integer.toString(jigNo) + ": ";
+		String jigStatus ="J"+ Integer.toString(sn) + ": ";
 		
-		if(Fail > 0) {
-			lb.setBackground(SystemColor.red);
-			jigStatus+= "ng";
-			lb.setText(jigStatus);
-		}else if(Pass+Fail == 0) {
+		java.awt.Label lb = new java.awt.Label();
+		
+		switch (sn) {
+		case 1:
+			lb = MainClient.lblJStat1;
+			break;
+		case 2:
+			lb = MainClient.lblJStat2;
+			break;
+		case 3:
+			lb = MainClient.lblJStat3;
+			break;
+		case 4:
+			lb = MainClient.lblJStat4;
+			break;
+		case 5:
+			lb = MainClient.lblJStat5;
+			break;
+		case 6:
+			lb = MainClient.lblJStat6;
+			break;
+		case 7:
+			lb = MainClient.lblJStat7;
+			break;
+		case 8:
+			lb = MainClient.lblJStat8;
+			break;
+		case 9:
+			lb = MainClient.lblJStat9;
+			break;
+		case 10:
+			lb = MainClient.lblJStat10;
+			break;
+		case 11:
+			lb = MainClient.lblJStat11;
+			break;
+		case 12:
+			lb = MainClient.lblJStat12;
+			break;
+		case 13:
+			lb = MainClient.lblJStat13;
+			break;
+		case 14:
+			lb = MainClient.lblJStat14;
+			break;
+		case 15:
+			lb = MainClient.lblJStat15;
+			break;
+		case 16:
+			lb = MainClient.lblJStat16;
+			break;
+		}
+		
+		if(jig == null) {
 			lb.setBackground(SystemColor.controlDkShadow);
 			jigStatus+= "off";
 			lb.setText(jigStatus);
 		}else {
-			lb.setBackground(SystemColor.green);
-			jigStatus+= "ok";
-			lb.setText(jigStatus);
+			
+			Boolean jigRes = true;
+			for(Button btn : jig.buttonList) {
+				
+				if(jigRes) {
+					
+					for(MarkInfo mark : btn.markList) {
+						
+						if(!mark.markResult) {
+							jigRes = false;
+							break;
+						}
+					}
+				}else {
+					break;
+				}
+			}
+			
+			if(jigRes) {
+				lb.setBackground(SystemColor.green);
+				jigStatus+= "ok";
+				lb.setText(jigStatus);
+			}else{
+				lb.setBackground(SystemColor.red);
+				jigStatus+= "ng";
+				lb.setText(jigStatus);
+			}
 		}
 	}
 	//dwyane 2019-0311 common func
