@@ -144,14 +144,14 @@ public class LoadInspection {
 	
 	public static void funCounting()  throws IOException, InterruptedException
 	{
-		CommonFunc.writeLogFile("==Debug Counting==   In Func  funCounting()");
+		//CommonFunc.writeLogFile("==Debug Counting==   In Func  funCounting()");
 		
 		//can't count when reflashqty
 		while(LoadDB.isReflashQTY){
 			Thread.sleep(50);
 		}
 		
-		CommonFunc.writeLogFile("==Debug Counting==   Ready to start reading & counting....");
+		//CommonFunc.writeLogFile("==Debug Counting==   Ready to start reading & counting....");
 		
 		
 		
@@ -165,13 +165,12 @@ public class LoadInspection {
 	 	CommonFunc.writeLogFile("==Debug Counting==   1.0 Get file, file name: "+countingFile.getName());
 	 	
 	 	BufferedReader BufferRead = new BufferedReader(new FileReader(countingFile));
-	 	CommonFunc.writeLogFile("==Debug Counting==   1.5 Read file to buffer end");
+	 	//CommonFunc.writeLogFile("==Debug Counting==   1.5 Read file to buffer end");
 	 	
 	 	
 	 	
 	 	
 	 	//2.0  **Core Logic**  Start to counting 
-	 	CommonFunc.writeLogFile("==Debug Counting==   2.0 Start to counting ");
 	 	LoadDB.WatchDogModel dogModel =new LoadDB().new WatchDogModel();
 	 	dogModel = countingResult(BufferRead);
 	 	
@@ -181,13 +180,13 @@ public class LoadInspection {
 			CommonFunc.writeLogFile("==Debug Counting==   2.5 Watchdog Model is null");
 			return ;
 		}
-		CommonFunc.writeLogFile("==Debug Counting==   2.5 Counting End");
+		//CommonFunc.writeLogFile("==Debug Counting==   2.5 Counting End");
 		
 		
 		
 		
 		//3.0 updated UI
-		CommonFunc.writeLogFile("==Debug Counting==   3.0 Update UI");
+		//CommonFunc.writeLogFile("==Debug Counting==   3.0 Update UI");
 		funInitUI(dogModel);
 		
 		
@@ -227,7 +226,7 @@ public class LoadInspection {
 	//===== dwyane Step-02 **Core Logic**  Counting =====//
 	public static LoadDB.WatchDogModel countingResult(BufferedReader buffer){
 		
-		CommonFunc.writeLogFile("==Debug Counting==   2.1 In Func countingResult  &  Start Setting Tray");
+		//CommonFunc.writeLogFile("==Debug Counting==   2.1 In Func countingResult  &  Start Setting Tray");
 		
 		LoadDB.WatchDogModel dogModel =new LoadDB().new WatchDogModel();
 		

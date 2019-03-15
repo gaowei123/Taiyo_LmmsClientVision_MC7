@@ -51,12 +51,14 @@ public class RunInspection implements Runnable{
 	{
 		try 
 		{
-			if(!CheckJobComplete())
-			{
-				MainClient.lblStat.setBackground(new Color(0, 255, 0));
-				LoadInspection.isCheckingResult = true;
-				LoadInspection.funCounting();
-				LoadInspection.isCheckingResult = false;
+			if(!LoadDB.rmsStatus.equals("technician")) {
+				if(!CheckJobComplete())
+				{
+					MainClient.lblStat.setBackground(new Color(0, 255, 0));
+					LoadInspection.isCheckingResult = true;
+					LoadInspection.funCounting();
+					LoadInspection.isCheckingResult = false;
+				}
 			}
 		}
 		catch (IOException e) { 
