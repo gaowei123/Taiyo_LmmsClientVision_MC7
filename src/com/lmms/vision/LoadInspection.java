@@ -45,7 +45,7 @@ public class LoadInspection {
 	public static boolean isCheckingResult = false;
 	
 	
-	//dwyane 2019-0308  for logic: file reading & counting 
+	//dwyane 2019-0308  for logic: file reading & counting
 	public class Tray{
 		List<Jig> jigList = new ArrayList<>();
 		
@@ -118,6 +118,7 @@ public class LoadInspection {
 			for(MarkInfo mark :markList) {
 				if(mark.markName.equals(markName)) {
 					result = true;
+					break;
 				}
 			}
 			
@@ -136,7 +137,7 @@ public class LoadInspection {
 		int Pass = 0;
 		int Fail = 0;
 	}
-	//dwyane 2019-0308  for logic: file reading & counting 
+	//dwyane 2019-0308  for logic: file reading & counting
 	
 	
 	
@@ -170,14 +171,14 @@ public class LoadInspection {
 	 	
 	 	
 	 	
-	 	//2.0  **Core Logic**  Start to counting 
+	 	//2.0  **Core Logic**  Start to counting
 	 	LoadDB.WatchDogModel dogModel =new LoadDB().new WatchDogModel();
 	 	dogModel = countingResult(BufferRead);
 	 	
 		BufferRead.close();//counting end, close buffer
 		
 		if(dogModel == null) {
-			CommonFunc.writeLogFile("==Debug Counting==   2.5 Watchdog Model is null");
+			CommonFunc.writeLogFile("==Debug Counting==   2.5 Counting error, watchdog model is null");
 			return ;
 		}
 		//CommonFunc.writeLogFile("==Debug Counting==   2.5 Counting End");
@@ -252,7 +253,7 @@ public class LoadInspection {
 				}
 				
 				String labelName = arrStrLine[1];
-				String[] arrLabelName = labelName.split("-");
+				String[] arrLabelName = labelName.split("\\|");// '|' 分隔必须要有\\
 				if(arrLabelName.length < 3)
 				{
 					CommonFunc.writeLogFile("==Debug Counting==   2.2.2 Label Name error value:"+labelName);
@@ -264,8 +265,13 @@ public class LoadInspection {
 				//get jig, button, mark info
 				String jigName = arrLabelName[0];
 				String btnName = arrLabelName[1];
-				String markName = arrLabelName[2];
-				String strMarkResult =arrStrLine[3];
+				String strMarkResult = arrStrLine[3];
+				String markName = "";
+				if(arrLabelName.length == 4) {
+					markName = arrLabelName[2];
+				}
+				
+				
 				MarkInfo mark = new LoadInspection().new MarkInfo();
 				mark.markName = markName;
 				if(strMarkResult.equals("Pass") || strMarkResult.equals("OK") || strMarkResult.equals("PASS"))//machine6,8 PASS    machine7 OK
@@ -281,19 +287,9 @@ public class LoadInspection {
 					
 					if(jig.findButton(btnName)) {
 						CommonFunc.writeLogFile("==Debug Counting==   2.3.2  Has button : "+btnName);
-						Button btn = jig.getBtn(btnName);
 						
-						if(btn.findMark(markName)) {
-							CommonFunc.writeLogFile("==Debug Counting==   2.3.3  Has mark : "+markName+", created new button");
-							Button newBtn = new LoadInspection().new Button();
-							newBtn.btnName = btnName;
-							newBtn.markList.add(mark);
-							
-							jig.buttonList.add(newBtn);
-						}else {
-							CommonFunc.writeLogFile("==Debug Counting==   2.3.3  Hasn't mark : "+markName+", add it");
-							btn.markList.add(mark);
-						}
+						Button btn = jig.getBtn(btnName);
+						btn.markList.add(mark);
 						
 					}else {
 						CommonFunc.writeLogFile("==Debug Counting==   2.3.2  Hasn't button : "+btnName+", created new button");
@@ -321,20 +317,22 @@ public class LoadInspection {
 			}
 			
 			
-			//update the jig status UI.
+			//update jig status UI
 			funUpdateJigUI(tray);
 			
 			
 			//foreach the Tray, put the result in listMaterial
 			List<MaterialResult> listMaterial = new ArrayList<>();
 			
+			CommonFunc.writeLogFile("==Debug Counting==   2.4  foreach the Tray, put the result in listMaterial ");
 			for(Jig jig : tray.jigList) {
 				
 				for(Button btn : jig.buttonList) {
 					
-					if(existMaterial(listMaterial,btn.btnName)) {
+					String btnSingleName = btn.btnName.split("-")[0];
+					if(existMaterial(listMaterial,btnSingleName)) {
 						
-						MaterialResult material = getMaterial(listMaterial,btn.btnName);
+						MaterialResult material = getMaterial(listMaterial,btnSingleName);
 						
 						Boolean btnStatus = true;
 						for(MarkInfo mark :btn.markList) {
@@ -351,8 +349,8 @@ public class LoadInspection {
 							material.Fail++;
 						}
 					}else {
-						MaterialResult material = new LoadInspection().new MaterialResult();
-						material.name=btn.btnName;
+						MaterialResult NewMaterial = new LoadInspection().new MaterialResult();
+						NewMaterial.name=btn.btnName.split("-")[0];
 						
 						Boolean btnStatus = true;
 						for(MarkInfo mark :btn.markList) {
@@ -364,12 +362,12 @@ public class LoadInspection {
 						}
 						
 						if(btnStatus) {
-							material.Pass++;
+							NewMaterial.Pass++;
 						}else {
-							material.Fail++;
+							NewMaterial.Fail++;
 						}
 						
-						listMaterial.add(material);
+						listMaterial.add(NewMaterial);
 					}
 				}
 			}
@@ -521,20 +519,15 @@ public class LoadInspection {
 	}
 	public static void funUpdateJigUI(Tray tray ) {
 		
-    	List<Jig> jigList = new ArrayList<>();
-    	
+		int sn = 1;
+		
     	for(Jig jig : tray.jigList) {
-    		jigList.add(jig);
+    		setColorForlbJig(jig,sn);
+    		sn++;
     	}
     	
     	for(int i = 0; i<16- tray.jigList.size();i++) {
-    		jigList.add(null);
-    	}
-    	
-		int sn = 1;
-    	for(Jig jig : jigList) {
-    		
-    		setColorForlbJig(jig,sn);
+    		setColorForlbJig(null,sn);
     		sn++;
     	}
 	}
@@ -551,6 +544,9 @@ public class LoadInspection {
 	
 	//dwyane 2019-0311 common func
 	public static Boolean existMaterial(List<MaterialResult> listMaterial,String name) {
+		
+		CommonFunc.writeLogFile("==Debug Counting==   2.4.1  In Func ");
+		
 		Boolean result = false;
 		
 		for( int i = 0 ; i < listMaterial.size() ; i++) {
