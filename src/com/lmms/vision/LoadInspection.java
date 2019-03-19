@@ -157,7 +157,7 @@ public class LoadInspection {
 		
 		
 		
-		//1.0 Get file 
+		//1.0 Get file
 	 	File countingFile = GetFile();
 	 	if(countingFile== null) {
 	 		//CommonFunc.writeLogFile("==Debug Counting==   1.0 Get file, No file found!");
@@ -171,7 +171,7 @@ public class LoadInspection {
 	 	
 	 	
 	 	
-	 	//2.0  **Core Logic**  Start to counting
+	 	//2.0 Counting **Core Logic**
 	 	LoadDB.WatchDogModel dogModel =new LoadDB().new WatchDogModel();
 	 	dogModel = countingResult(BufferRead);
 	 	

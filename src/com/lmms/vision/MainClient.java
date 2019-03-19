@@ -802,7 +802,7 @@ public class MainClient {
         lblJStat8.setFont(new Font("Century Gothic", Font.BOLD, 12));
         lblJStat8.setBackground(SystemColor.controlDkShadow);
         lblJStat8.setAlignment(Label.CENTER);
-        lblJStat8.setBounds(0, 653, 59, 13);
+        lblJStat8.setBounds(0, 655, 59, 13);
         panel.add(lblJStat8);
         
         lblJStat9 = new Label(" J9  : ---");
@@ -810,7 +810,7 @@ public class MainClient {
         lblJStat9.setFont(new Font("Century Gothic", Font.BOLD, 12));
         lblJStat9.setBackground(SystemColor.controlDkShadow);
         lblJStat9.setAlignment(Label.CENTER);
-        lblJStat9.setBounds(59, 558, 62, 13);
+        lblJStat9.setBounds(59, 558, 65, 13);
         panel.add(lblJStat9);
         
         lblJStat10 = new Label("J10: ---");
@@ -867,7 +867,7 @@ public class MainClient {
         lblJStat16.setFont(new Font("Century Gothic", Font.BOLD, 12));
         lblJStat16.setBackground(SystemColor.controlDkShadow);
         lblJStat16.setAlignment(Label.CENTER);
-        lblJStat16.setBounds(60, 653, 62, 13);
+        lblJStat16.setBounds(59, 655, 65, 13);
         panel.add(lblJStat16);
         //========================= 16 JIG =========================//
         
