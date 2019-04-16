@@ -465,6 +465,42 @@ public class LoadInspection {
 		dogModel.totalFail = dogModel.ng1count+dogModel.ng2count+dogModel.ng3count+dogModel.ng4count+dogModel.ng5count+dogModel.ng6count+dogModel.ng7count+dogModel.ng8count+dogModel.ng9count+dogModel.ng10count+dogModel.ng11count+dogModel.ng12count+dogModel.ng13count+dogModel.ng14count+dogModel.ng15count+dogModel.ng16count;
 		
 		
+		dogModel.ok1count += LoadDB.ok1Count;
+		dogModel.ok2count += LoadDB.ok2Count;
+		dogModel.ok3count += LoadDB.ok3Count;
+		dogModel.ok4count += LoadDB.ok4Count;
+		dogModel.ok5count += LoadDB.ok5Count;
+		dogModel.ok6count += LoadDB.ok6Count;
+		dogModel.ok7count += LoadDB.ok7Count;
+		dogModel.ok8count += LoadDB.ok8Count;
+		dogModel.ok9count += LoadDB.ok9Count;
+		dogModel.ok10count += LoadDB.ok10Count;
+		dogModel.ok11count += LoadDB.ok11Count;
+		dogModel.ok12count += LoadDB.ok12Count;
+		dogModel.ok13count += LoadDB.ok13Count;
+		dogModel.ok14count += LoadDB.ok14Count;
+		dogModel.ok15count += LoadDB.ok15Count;
+		dogModel.ok15count += LoadDB.ok16Count;
+		
+		dogModel.ng1count += LoadDB.ng1Count;
+		dogModel.ng2count += LoadDB.ng2Count;
+		dogModel.ng3count += LoadDB.ng3Count;
+		dogModel.ng4count += LoadDB.ng4Count;
+		dogModel.ng5count += LoadDB.ng5Count;
+		dogModel.ng6count += LoadDB.ng6Count;
+		dogModel.ng7count += LoadDB.ng7Count;
+		dogModel.ng8count += LoadDB.ng8Count;
+		dogModel.ng9count += LoadDB.ng9Count;
+		dogModel.ng10count += LoadDB.ng10Count;
+		dogModel.ng11count += LoadDB.ng11Count;
+		dogModel.ng12count += LoadDB.ng12Count;
+		dogModel.ng13count += LoadDB.ng13Count;
+		dogModel.ng14count += LoadDB.ng14Count;
+		dogModel.ng15count += LoadDB.ng15Count;
+		dogModel.ng15count += LoadDB.ng16Count;
+		
+		
+		
 		return dogModel;
 	}
 	
