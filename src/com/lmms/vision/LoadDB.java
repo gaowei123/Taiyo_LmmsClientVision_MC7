@@ -388,43 +388,82 @@ public class LoadDB {
 		        currentQuantity = LoadInspection.insTotalPass + LoadInspection.insTotalFail;
 		        MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
 	            todayTotalQuantity = todayTotalQuantityFirstStart;
+	            
+	            ok1Count = 0;
+            	ok2Count = 0;
+            	ok3Count = 0;
+            	ok4Count = 0;
+            	ok5Count = 0;
+            	ok6Count = 0;
+            	ok7Count = 0;
+            	ok8Count = 0;
+            	ok9Count = 0;     
+            	ok10Count = 0;
+            	ok11Count = 0;
+            	ok12Count = 0;
+            	ok13Count = 0;
+            	ok14Count = 0;
+            	ok15Count = 0;
+            	ok16Count = 0;    
+            			    	 
+            	ng1Count = 0;
+            	ng2Count = 0;
+            	ng3Count = 0;
+            	ng4Count = 0;
+            	ng5Count = 0;
+            	ng6Count = 0;
+            	ng7Count = 0;
+            	ng8Count = 0;
+            	ng9Count = 0;        
+            	ng10Count = 0;
+            	ng11Count = 0;
+            	ng12Count = 0;
+            	ng13Count = 0;
+            	ng14Count = 0;
+            	ng15Count = 0;
+            	ng16Count = 0;     
+	            
 	             
 	            isReflashQTY= false;
 	        }
+		    else 
+		    {
+	        	 ok1Count = sok1Count==null? 0: Integer.parseInt(sok1Count) ;
+		    	 ok2Count = sok2Count==null? 0: Integer.parseInt(sok2Count) ;
+		    	 ok3Count = sok3Count==null? 0:Integer.parseInt(sok3Count) ;
+		    	 ok4Count = sok4Count==null? 0:Integer.parseInt(sok4Count) ;
+		    	 ok5Count = sok5Count==null? 0: Integer.parseInt(sok5Count) ;
+		    	 ok6Count = sok6Count==null? 0:Integer.parseInt(sok6Count) ;
+		    	 ok7Count = sok7Count==null? 0:Integer.parseInt(sok7Count) ;
+		    	 ok8Count = sok8Count==null? 0:Integer.parseInt(sok8Count) ;
+		    	 ok9Count = sok9Count==null? 0:Integer.parseInt(sok9Count) ;
+		    	 ok10Count = sok10Count==null? 0:Integer.parseInt(sok10Count) ;
+		    	 ok11Count = sok11Count==null? 0:Integer.parseInt(sok11Count) ;
+		    	 ok12Count = sok12Count==null? 0:Integer.parseInt(sok12Count) ;
+		    	 ok13Count = sok13Count==null? 0:Integer.parseInt(sok13Count) ;
+		    	 ok14Count = sok14Count==null? 0:Integer.parseInt(sok14Count) ;
+		    	 ok15Count = sok15Count==null? 0:Integer.parseInt(sok15Count) ;
+		    	 ok16Count = sok16Count==null? 0:Integer.parseInt(sok16Count) ;
+		    	 
+		    	 ng1Count = sng1Count ==null? 0: Integer.parseInt(sng1Count) ;
+		    	 ng2Count = sng2Count ==null? 0:Integer.parseInt(sng2Count) ;
+		    	 ng3Count = sng3Count ==null? 0:Integer.parseInt(sng3Count) ;
+		    	 ng4Count = sng4Count ==null? 0:Integer.parseInt(sng4Count) ;
+		    	 ng5Count = sng5Count ==null? 0:Integer.parseInt(sng5Count) ;
+		    	 ng6Count = sng6Count ==null? 0:Integer.parseInt(sng6Count) ;
+		    	 ng7Count = sng7Count ==null? 0:Integer.parseInt(sng7Count) ;
+		    	 ng8Count = sng8Count ==null? 0:Integer.parseInt(sng8Count) ;
+		    	 ng9Count = sng9Count ==null? 0:Integer.parseInt(sng9Count) ;
+		    	 ng10Count = sng10Count ==null? 0:Integer.parseInt(sng10Count) ;
+		    	 ng11Count = sng11Count ==null? 0:Integer.parseInt(sng11Count) ;
+		    	 ng12Count = sng12Count ==null? 0:Integer.parseInt(sng12Count) ;
+		    	 ng13Count = sng13Count ==null? 0:Integer.parseInt(sng13Count) ;
+		    	 ng14Count = sng14Count ==null? 0:Integer.parseInt(sng14Count) ;
+		    	 ng15Count = sng15Count ==null? 0:Integer.parseInt(sng15Count) ;
+		    	 ng16Count = sng16Count ==null? 0:Integer.parseInt(sng16Count) ;
+	        }
 		    
-		     ok1Count = sok1Count==null? 0: Integer.parseInt(sok1Count) ;
-	    	 ok2Count = sok2Count==null? 0: Integer.parseInt(sok2Count) ;
-	    	 ok3Count = sok3Count==null? 0:Integer.parseInt(sok3Count) ;
-	    	 ok4Count = sok4Count==null? 0:Integer.parseInt(sok4Count) ;
-	    	 ok5Count = sok5Count==null? 0: Integer.parseInt(sok5Count) ;
-	    	 ok6Count = sok6Count==null? 0:Integer.parseInt(sok6Count) ;
-	    	 ok7Count = sok7Count==null? 0:Integer.parseInt(sok7Count) ;
-	    	 ok8Count = sok8Count==null? 0:Integer.parseInt(sok8Count) ;
-	    	 ok9Count = sok9Count==null? 0:Integer.parseInt(sok9Count) ;
-	    	 ok10Count = sok10Count==null? 0:Integer.parseInt(sok10Count) ;
-	    	 ok11Count = sok11Count==null? 0:Integer.parseInt(sok11Count) ;
-	    	 ok12Count = sok12Count==null? 0:Integer.parseInt(sok12Count) ;
-	    	 ok13Count = sok13Count==null? 0:Integer.parseInt(sok13Count) ;
-	    	 ok14Count = sok14Count==null? 0:Integer.parseInt(sok14Count) ;
-	    	 ok15Count = sok15Count==null? 0:Integer.parseInt(sok15Count) ;
-	    	 ok16Count = sok16Count==null? 0:Integer.parseInt(sok16Count) ;
-	    	 
-	    	 ng1Count = sng1Count ==null? 0: Integer.parseInt(sng1Count) ;
-	    	 ng2Count = sng2Count ==null? 0:Integer.parseInt(sng2Count) ;
-	    	 ng3Count = sng3Count ==null? 0:Integer.parseInt(sng3Count) ;
-	    	 ng4Count = sng4Count ==null? 0:Integer.parseInt(sng4Count) ;
-	    	 ng5Count = sng5Count ==null? 0:Integer.parseInt(sng5Count) ;
-	    	 ng6Count = sng6Count ==null? 0:Integer.parseInt(sng6Count) ;
-	    	 ng7Count = sng7Count ==null? 0:Integer.parseInt(sng7Count) ;
-	    	 ng8Count = sng8Count ==null? 0:Integer.parseInt(sng8Count) ;
-	    	 ng9Count = sng9Count ==null? 0:Integer.parseInt(sng9Count) ;
-	    	 ng10Count = sng10Count ==null? 0:Integer.parseInt(sng10Count) ;
-	    	 ng11Count = sng11Count ==null? 0:Integer.parseInt(sng11Count) ;
-	    	 ng12Count = sng12Count ==null? 0:Integer.parseInt(sng12Count) ;
-	    	 ng13Count = sng13Count ==null? 0:Integer.parseInt(sng13Count) ;
-	    	 ng14Count = sng14Count ==null? 0:Integer.parseInt(sng14Count) ;
-	    	 ng15Count = sng15Count ==null? 0:Integer.parseInt(sng15Count) ;
-	    	 ng16Count = sng16Count ==null? 0:Integer.parseInt(sng16Count) ;
+		     
 		    
 			  
 		    MainClient.lblRMS.setText(rmsStatus);
