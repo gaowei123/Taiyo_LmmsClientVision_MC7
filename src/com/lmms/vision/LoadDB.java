@@ -37,74 +37,6 @@ public class LoadDB {
 	public static Boolean runFirstTime = true;
 	public static String connectionUrl = ConfigLog.connectionstrSet;
 	
-	public static Integer ok1Count = 0;
-	public static Integer ok2Count = 0;
-	public static Integer ok3Count = 0;
-	public static Integer ok4Count = 0;
-	public static Integer ok5Count = 0;
-	public static Integer ok6Count = 0;
-	public static Integer ok7Count = 0;
-	public static Integer ok8Count = 0;
-	public static Integer ok9Count = 0;
-	public static Integer ok10Count = 0;
-	public static Integer ok11Count = 0;
-	public static Integer ok12Count = 0;
-	public static Integer ok13Count = 0;
-	public static Integer ok14Count = 0;
-	public static Integer ok15Count = 0;
-	public static Integer ok16Count = 0;
-	
-	public static String sok1Count = "";
-	public static String sok2Count = "";
-	public static String sok3Count = "";
-	public static String sok4Count = "";
-	public static String sok5Count = "";
-	public static String sok6Count = "";
-	public static String sok7Count = "";
-	public static String sok8Count = "";
-	public static String sok9Count = "";
-	public static String sok10Count ="";
-	public static String sok11Count ="";
-	public static String sok12Count = "";
-	public static String sok13Count = "";
-	public static String sok14Count = "";
-	public static String sok15Count = "";
-	public static String sok16Count = "";
-	
-	public static Integer ng1Count = 0;
-	public static Integer ng2Count = 0;
-	public static Integer ng3Count = 0;
-	public static Integer ng4Count = 0;
-	public static Integer ng5Count = 0;
-	public static Integer ng6Count = 0;
-	public static Integer ng7Count = 0;
-	public static Integer ng8Count = 0;
-	public static Integer ng9Count = 0;
-	public static Integer ng10Count = 0;
-	public static Integer ng11Count = 0;
-	public static Integer ng12Count = 0;
-	public static Integer ng13Count = 0;
-	public static Integer ng14Count = 0;
-	public static Integer ng15Count = 0;
-	public static Integer ng16Count = 0;
-	
-	public static String sng1Count = "";
-	public static String sng2Count = "";
-	public static String sng3Count = "";
-	public static String sng4Count = "";
-	public static String sng5Count = "";
-	public static String sng6Count = "";
-	public static String sng7Count = "";
-	public static String sng8Count = "";
-	public static String sng9Count = "";
-	public static String sng10Count ="";
-	public static String sng11Count ="";
-	public static String sng12Count = "";
-	public static String sng13Count = "";
-	public static String sng14Count = "";
-	public static String sng15Count = "";
-	public static String sng16Count = "";
-	
 	
 	
 	
@@ -326,40 +258,6 @@ public class LoadDB {
 		         startJobFlag = rs.getString("goodOK").equals("true")?true:false;  //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
 
 		         
-		        sok1Count = rs.getString("ok1Count");
-		        sok2Count = rs.getString("ok2Count");
-		        sok3Count = rs.getString("ok3Count");
-		        sok4Count = rs.getString("ok4Count");
-		        sok5Count = rs.getString("ok5Count");
-		        sok6Count = rs.getString("ok6Count");
-		        sok7Count = rs.getString("ok7Count");
-		        sok8Count = rs.getString("ok8Count");
-		        sok9Count = rs.getString("ok9Count");
-		        sok10Count = rs.getString("ok10Count");
-		        sok11Count = rs.getString("ok11Count");
-		        sok12Count = rs.getString("ok12Count");
-		        sok13Count = rs.getString("ok13Count");
-		        sok14Count = rs.getString("ok14Count");
-		        sok15Count = rs.getString("ok15Count");
-		        sok16Count = rs.getString("ok16Count");
-		         
-		        sng1Count = rs.getString("ng1Count");
-		        sng2Count = rs.getString("ng2Count");
-		        sng3Count = rs.getString("ng3Count");
-		        sng4Count = rs.getString("ng4Count");
-		        sng5Count = rs.getString("ng5Count");
-		        sng6Count = rs.getString("ng6Count");
-		        sng7Count = rs.getString("ng7Count");
-		        sng8Count = rs.getString("ng8Count");
-		        sng9Count = rs.getString("ng9Count");
-		        sng10Count = rs.getString("ng10Count");
-		        sng11Count = rs.getString("ng11Count");
-		        sng12Count = rs.getString("ng12Count");
-		        sng13Count = rs.getString("ng13Count");
-		        sng14Count = rs.getString("ng14Count");
-		        sng15Count = rs.getString("ng15Count");
-		        sng16Count = rs.getString("ng16Count");
-		        
 		         str_light = rs.getString("Lighting");
 		         str_camera = rs.getString("Camera");
 		         str_power = rs.getString("CurrentPower");
@@ -389,80 +287,46 @@ public class LoadDB {
 		        MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
 	            todayTotalQuantity = todayTotalQuantityFirstStart;
 	            
-	            ok1Count = 0;
-            	ok2Count = 0;
-            	ok3Count = 0;
-            	ok4Count = 0;
-            	ok5Count = 0;
-            	ok6Count = 0;
-            	ok7Count = 0;
-            	ok8Count = 0;
-            	ok9Count = 0;     
-            	ok10Count = 0;
-            	ok11Count = 0;
-            	ok12Count = 0;
-            	ok13Count = 0;
-            	ok14Count = 0;
-            	ok15Count = 0;
-            	ok16Count = 0;    
-            			    	 
-            	ng1Count = 0;
-            	ng2Count = 0;
-            	ng3Count = 0;
-            	ng4Count = 0;
-            	ng5Count = 0;
-            	ng6Count = 0;
-            	ng7Count = 0;
-            	ng8Count = 0;
-            	ng9Count = 0;        
-            	ng10Count = 0;
-            	ng11Count = 0;
-            	ng12Count = 0;
-            	ng13Count = 0;
-            	ng14Count = 0;
-            	ng15Count = 0;
-            	ng16Count = 0;     
+	            //startJobFlag == true set 0
+	            LoadInspection.jobOk1Count  = 0;
+	    		LoadInspection.jobOk2Count = 0;
+	    		LoadInspection.jobOk3Count = 0;
+	    		LoadInspection.jobOk4Count = 0;
+	    		LoadInspection.jobOk5Count = 0;
+	    		LoadInspection.jobOk6Count = 0;
+	    		LoadInspection.jobOk7Count = 0;
+	    		LoadInspection.jobOk8Count = 0;
+	    		LoadInspection.jobOk9Count = 0;
+	    		LoadInspection.jobOk10Count = 0;
+	    		LoadInspection.jobOk11Count = 0;
+	    		LoadInspection.jobOk12Count = 0;
+	    		LoadInspection.jobOk13Count = 0;
+	    		LoadInspection.jobOk14Count = 0;
+	    		LoadInspection.jobOk15Count = 0;
+	    		LoadInspection.jobOk16Count = 0;
+
+	    		LoadInspection.jobNg1Count = 0;
+	    		LoadInspection.jobNg2Count = 0;
+	    		LoadInspection.jobNg3Count = 0;
+	    		LoadInspection.jobNg4Count = 0;
+	    		LoadInspection.jobNg5Count = 0;
+	    		LoadInspection.jobNg6Count = 0;
+	    		LoadInspection.jobNg7Count = 0;
+	    		LoadInspection.jobNg8Count = 0;
+	    		LoadInspection.jobNg9Count = 0;
+	    		LoadInspection.jobNg10Count = 0;
+	    		LoadInspection.jobNg11Count = 0;
+	    		LoadInspection.jobNg12Count = 0;
+	    		LoadInspection.jobNg13Count = 0;
+	    		LoadInspection.jobNg14Count = 0;
+	    		LoadInspection.jobNg15Count = 0;
+	    		LoadInspection.jobNg16Count = 0;
 	            
-	             
+	            
+	            
 	            isReflashQTY= false;
 	        }
-		    else 
-		    {
-	        	 ok1Count = sok1Count==null? 0: Integer.parseInt(sok1Count) ;
-		    	 ok2Count = sok2Count==null? 0: Integer.parseInt(sok2Count) ;
-		    	 ok3Count = sok3Count==null? 0:Integer.parseInt(sok3Count) ;
-		    	 ok4Count = sok4Count==null? 0:Integer.parseInt(sok4Count) ;
-		    	 ok5Count = sok5Count==null? 0: Integer.parseInt(sok5Count) ;
-		    	 ok6Count = sok6Count==null? 0:Integer.parseInt(sok6Count) ;
-		    	 ok7Count = sok7Count==null? 0:Integer.parseInt(sok7Count) ;
-		    	 ok8Count = sok8Count==null? 0:Integer.parseInt(sok8Count) ;
-		    	 ok9Count = sok9Count==null? 0:Integer.parseInt(sok9Count) ;
-		    	 ok10Count = sok10Count==null? 0:Integer.parseInt(sok10Count) ;
-		    	 ok11Count = sok11Count==null? 0:Integer.parseInt(sok11Count) ;
-		    	 ok12Count = sok12Count==null? 0:Integer.parseInt(sok12Count) ;
-		    	 ok13Count = sok13Count==null? 0:Integer.parseInt(sok13Count) ;
-		    	 ok14Count = sok14Count==null? 0:Integer.parseInt(sok14Count) ;
-		    	 ok15Count = sok15Count==null? 0:Integer.parseInt(sok15Count) ;
-		    	 ok16Count = sok16Count==null? 0:Integer.parseInt(sok16Count) ;
-		    	 
-		    	 ng1Count = sng1Count ==null? 0: Integer.parseInt(sng1Count) ;
-		    	 ng2Count = sng2Count ==null? 0:Integer.parseInt(sng2Count) ;
-		    	 ng3Count = sng3Count ==null? 0:Integer.parseInt(sng3Count) ;
-		    	 ng4Count = sng4Count ==null? 0:Integer.parseInt(sng4Count) ;
-		    	 ng5Count = sng5Count ==null? 0:Integer.parseInt(sng5Count) ;
-		    	 ng6Count = sng6Count ==null? 0:Integer.parseInt(sng6Count) ;
-		    	 ng7Count = sng7Count ==null? 0:Integer.parseInt(sng7Count) ;
-		    	 ng8Count = sng8Count ==null? 0:Integer.parseInt(sng8Count) ;
-		    	 ng9Count = sng9Count ==null? 0:Integer.parseInt(sng9Count) ;
-		    	 ng10Count = sng10Count ==null? 0:Integer.parseInt(sng10Count) ;
-		    	 ng11Count = sng11Count ==null? 0:Integer.parseInt(sng11Count) ;
-		    	 ng12Count = sng12Count ==null? 0:Integer.parseInt(sng12Count) ;
-		    	 ng13Count = sng13Count ==null? 0:Integer.parseInt(sng13Count) ;
-		    	 ng14Count = sng14Count ==null? 0:Integer.parseInt(sng14Count) ;
-		    	 ng15Count = sng15Count ==null? 0:Integer.parseInt(sng15Count) ;
-		    	 ng16Count = sng16Count ==null? 0:Integer.parseInt(sng16Count) ;
-	        }
-		    
+		   
 		     
 		    
 			  
@@ -1124,7 +988,7 @@ public class LoadDB {
 	{
 	  Connection con = null;  
 	  Statement stmt = null;  
-	  ResultSet rs = null;  
+	  ResultSet rs = null;
 	  try {  
 		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 		 con = DriverManager.getConnection(connectionUrl);  
@@ -1154,38 +1018,38 @@ public class LoadDB {
 		 SQL += ", model14Name = '" + dogModel.model14name + "'";
 		 SQL += ", model15Name = '" + dogModel.model15name + "'";
 		 SQL += ", model16Name = '" + dogModel.model16name + "'";
-		 SQL += ", ok1Count = " + Integer.toString(Math.abs(dogModel.ok1count) );
-		 SQL += ", ok2Count = " + Integer.toString(Math.abs(dogModel.ok2count));
-		 SQL += ", ok3Count = " + Integer.toString(Math.abs(dogModel.ok3count));
-		 SQL += ", ok4Count = " + Integer.toString(Math.abs(dogModel.ok4count));
-		 SQL += ", ok5Count = " + Integer.toString(Math.abs(dogModel.ok5count));
-		 SQL += ", ok6Count = " + Integer.toString(Math.abs(dogModel.ok6count));
-		 SQL += ", ok7Count = " + Integer.toString(Math.abs(dogModel.ok7count));
-		 SQL += ", ok8Count = " + Integer.toString(Math.abs(dogModel.ok8count));
-		 SQL += ", ok9Count = " + Integer.toString(Math.abs(dogModel.ok9count));
-		 SQL += ", ok10Count = " + Integer.toString(Math.abs(dogModel.ok10count));
-		 SQL += ", ok11Count = " + Integer.toString(Math.abs(dogModel.ok11count));
-		 SQL += ", ok12Count = " + Integer.toString(Math.abs(dogModel.ok12count));
-		 SQL += ", ok13Count = " + Integer.toString(Math.abs(dogModel.ok13count));
-		 SQL += ", ok14Count = " + Integer.toString(Math.abs(dogModel.ok14count));
-		 SQL += ", ok15Count = " + Integer.toString(Math.abs(dogModel.ok15count));
-		 SQL += ", ok16Count = " + Integer.toString(Math.abs(dogModel.ok16count));
-		 SQL += ", ng1Count = " + Integer.toString(Math.abs(dogModel.ng1count) );
-		 SQL += ", ng2Count = " + Integer.toString(Math.abs(dogModel.ng2count));
-		 SQL += ", ng3Count = " + Integer.toString(Math.abs(dogModel.ng3count));
-		 SQL += ", ng4Count = " + Integer.toString(Math.abs(dogModel.ng4count));
-		 SQL += ", ng5Count = " + Integer.toString(Math.abs(dogModel.ng5count));
-		 SQL += ", ng6Count = " + Integer.toString(Math.abs(dogModel.ng6count));
-		 SQL += ", ng7Count = " + Integer.toString(Math.abs(dogModel.ng7count));
-		 SQL += ", ng8Count = " + Integer.toString(Math.abs(dogModel.ng8count));
-		 SQL += ", ng9Count = " + Integer.toString(Math.abs(dogModel.ng9count));
-		 SQL += ", ng10Count = " + Integer.toString(Math.abs(dogModel.ng10count));
-		 SQL += ", ng11Count = " + Integer.toString(Math.abs(dogModel.ng11count));
-		 SQL += ", ng12Count = " + Integer.toString(Math.abs(dogModel.ng12count));
-		 SQL += ", ng13Count = " + Integer.toString(Math.abs(dogModel.ng13count));
-		 SQL += ", ng14Count = " + Integer.toString(Math.abs(dogModel.ng14count));
-		 SQL += ", ng15Count = " + Integer.toString(Math.abs(dogModel.ng15count));
-		 SQL += ", ng16Count = " + Integer.toString(Math.abs(dogModel.ng16count));
+		 SQL += ", ok1Count = " + Integer.toString(Math.abs(LoadInspection.jobOk1Count) );
+		 SQL += ", ok2Count = " + Integer.toString(Math.abs(LoadInspection.jobOk2Count));
+		 SQL += ", ok3Count = " + Integer.toString(Math.abs(LoadInspection.jobOk3Count));
+		 SQL += ", ok4Count = " + Integer.toString(Math.abs(LoadInspection.jobOk4Count));
+		 SQL += ", ok5Count = " + Integer.toString(Math.abs(LoadInspection.jobOk5Count));
+		 SQL += ", ok6Count = " + Integer.toString(Math.abs(LoadInspection.jobOk6Count));
+		 SQL += ", ok7Count = " + Integer.toString(Math.abs(LoadInspection.jobOk7Count));
+		 SQL += ", ok8Count = " + Integer.toString(Math.abs(LoadInspection.jobOk8Count));
+		 SQL += ", ok9Count = " + Integer.toString(Math.abs(LoadInspection.jobOk9Count));
+		 SQL += ", ok10Count = " + Integer.toString(Math.abs(LoadInspection.jobOk10Count));
+		 SQL += ", ok11Count = " + Integer.toString(Math.abs(LoadInspection.jobOk11Count));
+		 SQL += ", ok12Count = " + Integer.toString(Math.abs(LoadInspection.jobOk12Count));
+		 SQL += ", ok13Count = " + Integer.toString(Math.abs(LoadInspection.jobOk13Count));
+		 SQL += ", ok14Count = " + Integer.toString(Math.abs(LoadInspection.jobOk14Count));
+		 SQL += ", ok15Count = " + Integer.toString(Math.abs(LoadInspection.jobOk15Count));
+		 SQL += ", ok16Count = " + Integer.toString(Math.abs(LoadInspection.jobOk16Count));
+		 SQL += ", ng1Count = " + Integer.toString(Math.abs(LoadInspection.jobNg1Count) );
+		 SQL += ", ng2Count = " + Integer.toString(Math.abs(LoadInspection.jobNg2Count));
+		 SQL += ", ng3Count = " + Integer.toString(Math.abs(LoadInspection.jobNg3Count));
+		 SQL += ", ng4Count = " + Integer.toString(Math.abs(LoadInspection.jobNg4Count));
+		 SQL += ", ng5Count = " + Integer.toString(Math.abs(LoadInspection.jobNg5Count));
+		 SQL += ", ng6Count = " + Integer.toString(Math.abs(LoadInspection.jobNg6Count));
+		 SQL += ", ng7Count = " + Integer.toString(Math.abs(LoadInspection.jobNg7Count));
+		 SQL += ", ng8Count = " + Integer.toString(Math.abs(LoadInspection.jobNg8Count));
+		 SQL += ", ng9Count = " + Integer.toString(Math.abs(LoadInspection.jobNg9Count));
+		 SQL += ", ng10Count = " + Integer.toString(Math.abs(LoadInspection.jobNg10Count));
+		 SQL += ", ng11Count = " + Integer.toString(Math.abs(LoadInspection.jobNg11Count));
+		 SQL += ", ng12Count = " + Integer.toString(Math.abs(LoadInspection.jobNg12Count));
+		 SQL += ", ng13Count = " + Integer.toString(Math.abs(LoadInspection.jobNg13Count));
+		 SQL += ", ng14Count = " + Integer.toString(Math.abs(LoadInspection.jobNg14Count));
+		 SQL += ", ng15Count = " + Integer.toString(Math.abs(LoadInspection.jobNg15Count));
+		 SQL += ", ng16Count = " + Integer.toString(Math.abs(LoadInspection.jobNg16Count));
 		
 		 SQL += " WHERE  ";
 		 SQL += " jobNumber='" + currentJobNumber + "' ";

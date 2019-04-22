@@ -44,6 +44,42 @@ public class LoadInspection {
 	public static int insTotalFail = 0;
 	public static boolean isCheckingResult = false;
 	
+	public static int jobOk1Count = 0;
+	public static int jobOk2Count = 0;
+	public static int jobOk3Count = 0;
+	public static int jobOk4Count = 0;
+	public static int jobOk5Count = 0;
+	public static int jobOk6Count = 0;
+	public static int jobOk7Count = 0;
+	public static int jobOk8Count = 0;
+	public static int jobOk9Count = 0;
+	public static int jobOk10Count = 0;
+	public static int jobOk11Count = 0;
+	public static int jobOk12Count = 0;
+	public static int jobOk13Count = 0;
+	public static int jobOk14Count = 0;
+	public static int jobOk15Count = 0;
+	public static int jobOk16Count = 0;
+	
+	public static int jobNg1Count = 0;
+	public static int jobNg2Count = 0;
+	public static int jobNg3Count = 0;
+	public static int jobNg4Count = 0;
+	public static int jobNg5Count = 0;
+	public static int jobNg6Count = 0;
+	public static int jobNg7Count = 0;
+	public static int jobNg8Count = 0;
+	public static int jobNg9Count = 0;
+	public static int jobNg10Count = 0;
+	public static int jobNg11Count = 0;
+	public static int jobNg12Count = 0;
+	public static int jobNg13Count = 0;
+	public static int jobNg14Count = 0;
+	public static int jobNg15Count = 0;
+	public static int jobNg16Count = 0;
+	
+	
+	
 	
 	//dwyane 2019-0308  for logic: file reading & counting
 	public class Tray{
@@ -465,39 +501,40 @@ public class LoadInspection {
 		dogModel.totalFail = dogModel.ng1count+dogModel.ng2count+dogModel.ng3count+dogModel.ng4count+dogModel.ng5count+dogModel.ng6count+dogModel.ng7count+dogModel.ng8count+dogModel.ng9count+dogModel.ng10count+dogModel.ng11count+dogModel.ng12count+dogModel.ng13count+dogModel.ng14count+dogModel.ng15count+dogModel.ng16count;
 		
 		
-		dogModel.ok1count += LoadDB.ok1Count;
-		dogModel.ok2count += LoadDB.ok2Count;
-		dogModel.ok3count += LoadDB.ok3Count;
-		dogModel.ok4count += LoadDB.ok4Count;
-		dogModel.ok5count += LoadDB.ok5Count;
-		dogModel.ok6count += LoadDB.ok6Count;
-		dogModel.ok7count += LoadDB.ok7Count;
-		dogModel.ok8count += LoadDB.ok8Count;
-		dogModel.ok9count += LoadDB.ok9Count;
-		dogModel.ok10count += LoadDB.ok10Count;
-		dogModel.ok11count += LoadDB.ok11Count;
-		dogModel.ok12count += LoadDB.ok12Count;
-		dogModel.ok13count += LoadDB.ok13Count;
-		dogModel.ok14count += LoadDB.ok14Count;
-		dogModel.ok15count += LoadDB.ok15Count;
-		dogModel.ok15count += LoadDB.ok16Count;
-		
-		dogModel.ng1count += LoadDB.ng1Count;
-		dogModel.ng2count += LoadDB.ng2Count;
-		dogModel.ng3count += LoadDB.ng3Count;
-		dogModel.ng4count += LoadDB.ng4Count;
-		dogModel.ng5count += LoadDB.ng5Count;
-		dogModel.ng6count += LoadDB.ng6Count;
-		dogModel.ng7count += LoadDB.ng7Count;
-		dogModel.ng8count += LoadDB.ng8Count;
-		dogModel.ng9count += LoadDB.ng9Count;
-		dogModel.ng10count += LoadDB.ng10Count;
-		dogModel.ng11count += LoadDB.ng11Count;
-		dogModel.ng12count += LoadDB.ng12Count;
-		dogModel.ng13count += LoadDB.ng13Count;
-		dogModel.ng14count += LoadDB.ng14Count;
-		dogModel.ng15count += LoadDB.ng15Count;
-		dogModel.ng15count += LoadDB.ng16Count;
+		jobOk1Count += dogModel.ok1count;
+		jobOk2Count += dogModel.ok2count;
+		jobOk3Count += dogModel.ok3count;
+		jobOk4Count += dogModel.ok4count;
+		jobOk5Count += dogModel.ok5count;
+		jobOk6Count += dogModel.ok6count;
+		jobOk7Count += dogModel.ok7count;
+		jobOk8Count += dogModel.ok8count;
+		jobOk9Count += dogModel.ok9count;
+		jobOk10Count += dogModel.ok10count;
+		jobOk11Count += dogModel.ok11count;
+		jobOk12Count += dogModel.ok12count;
+		jobOk13Count += dogModel.ok13count;
+		jobOk14Count += dogModel.ok14count;
+		jobOk15Count += dogModel.ok15count;
+		jobOk16Count += dogModel.ok16count;
+
+		jobNg1Count += dogModel.ng1count;
+		jobNg2Count += dogModel.ng2count;
+		jobNg3Count += dogModel.ng3count;
+		jobNg4Count += dogModel.ng4count;
+		jobNg5Count += dogModel.ng5count;
+		jobNg6Count += dogModel.ng6count;
+		jobNg7Count += dogModel.ng7count;
+		jobNg8Count += dogModel.ng8count;
+		jobNg9Count += dogModel.ng9count;
+		jobNg10Count += dogModel.ng10count;
+		jobNg11Count += dogModel.ng11count;
+		jobNg12Count += dogModel.ng12count;
+		jobNg13Count += dogModel.ng13count;
+		jobNg14Count += dogModel.ng14count;
+		jobNg15Count += dogModel.ng15count;
+		jobNg16Count += dogModel.ng16count;
+
 		
 		
 		
