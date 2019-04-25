@@ -287,42 +287,6 @@ public class LoadDB {
 		        MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
 	            todayTotalQuantity = todayTotalQuantityFirstStart;
 	            
-	            //startJobFlag == true set 0
-	            LoadInspection.jobOk1Count  = 0;
-	    		LoadInspection.jobOk2Count = 0;
-	    		LoadInspection.jobOk3Count = 0;
-	    		LoadInspection.jobOk4Count = 0;
-	    		LoadInspection.jobOk5Count = 0;
-	    		LoadInspection.jobOk6Count = 0;
-	    		LoadInspection.jobOk7Count = 0;
-	    		LoadInspection.jobOk8Count = 0;
-	    		LoadInspection.jobOk9Count = 0;
-	    		LoadInspection.jobOk10Count = 0;
-	    		LoadInspection.jobOk11Count = 0;
-	    		LoadInspection.jobOk12Count = 0;
-	    		LoadInspection.jobOk13Count = 0;
-	    		LoadInspection.jobOk14Count = 0;
-	    		LoadInspection.jobOk15Count = 0;
-	    		LoadInspection.jobOk16Count = 0;
-
-	    		LoadInspection.jobNg1Count = 0;
-	    		LoadInspection.jobNg2Count = 0;
-	    		LoadInspection.jobNg3Count = 0;
-	    		LoadInspection.jobNg4Count = 0;
-	    		LoadInspection.jobNg5Count = 0;
-	    		LoadInspection.jobNg6Count = 0;
-	    		LoadInspection.jobNg7Count = 0;
-	    		LoadInspection.jobNg8Count = 0;
-	    		LoadInspection.jobNg9Count = 0;
-	    		LoadInspection.jobNg10Count = 0;
-	    		LoadInspection.jobNg11Count = 0;
-	    		LoadInspection.jobNg12Count = 0;
-	    		LoadInspection.jobNg13Count = 0;
-	    		LoadInspection.jobNg14Count = 0;
-	    		LoadInspection.jobNg15Count = 0;
-	    		LoadInspection.jobNg16Count = 0;
-	            
-	            
 	            
 	            isReflashQTY= false;
 	        }
@@ -986,13 +950,74 @@ public class LoadDB {
 	//2018 06 28 added by wei lijia for Machine 6+7
 	public static void funSendCountPassAndFailLMMSLog(LoadDB.WatchDogModel dogModel)
 	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;
-	  try {  
+		 Connection con = null;
+		  Statement stmt = null;
+		  ResultSet rs = null;
+	  try {
 		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 		 con = DriverManager.getConnection(connectionUrl);  
 		
+		 
+		 
+		 
+		//2019-04-25  get ok/ng from lmmswatchlog
+		 
+		 
+		 String strSql = "Select * from LMMSWatchLog where jobnumber = '"+currentJobNumber+"'";
+			
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+			con = DriverManager.getConnection(connectionUrl);
+		 	stmt = con.createStatement();
+		 	rs = stmt.executeQuery(strSql);  
+
+			while(rs.next()) {
+				
+				if(!rs.getString("ok1Count").equals(""))  dogModel.ok1count += Integer.parseInt(rs.getString("ok1Count"));
+				if(!rs.getString("ok2Count").equals(""))  dogModel.ok2count += Integer.parseInt(rs.getString("ok2Count"));
+				if(!rs.getString("ok3Count").equals(""))  dogModel.ok3count += Integer.parseInt(rs.getString("ok3Count"));
+				if(!rs.getString("ok4Count").equals(""))  dogModel.ok4count += Integer.parseInt(rs.getString("ok4Count"));
+				if(!rs.getString("ok5Count").equals(""))  dogModel.ok5count += Integer.parseInt(rs.getString("ok5Count"));
+				if(!rs.getString("ok6Count").equals(""))  dogModel.ok6count += Integer.parseInt(rs.getString("ok6Count"));
+				if(!rs.getString("ok7Count").equals(""))  dogModel.ok7count += Integer.parseInt(rs.getString("ok7Count"));
+				if(!rs.getString("ok8Count").equals(""))  dogModel.ok8count += Integer.parseInt(rs.getString("ok8Count"));
+				if(!rs.getString("ok9Count").equals(""))  dogModel.ok9count += Integer.parseInt(rs.getString("ok9Count"));
+				if(!rs.getString("ok10Count").equals(""))  dogModel.ok10count += Integer.parseInt(rs.getString("ok10Count"));
+				if(!rs.getString("ok11Count").equals(""))  dogModel.ok11count += Integer.parseInt(rs.getString("ok11Count"));
+				if(!rs.getString("ok12Count").equals(""))  dogModel.ok12count += Integer.parseInt(rs.getString("ok12Count"));
+				if(!rs.getString("ok13Count").equals(""))  dogModel.ok13count += Integer.parseInt(rs.getString("ok13Count"));
+				if(!rs.getString("ok14Count").equals(""))  dogModel.ok14count += Integer.parseInt(rs.getString("ok14Count"));
+				if(!rs.getString("ok15Count").equals(""))  dogModel.ok15count += Integer.parseInt(rs.getString("ok15Count"));
+				if(!rs.getString("ok16Count").equals(""))  dogModel.ok16count += Integer.parseInt(rs.getString("ok16Count"));
+				
+				
+				if(!rs.getString("ng1Count").equals(""))  dogModel.ng1count += Integer.parseInt(rs.getString("ng1Count"));
+				if(!rs.getString("ng2Count").equals(""))  dogModel.ng2count += Integer.parseInt(rs.getString("ng2Count"));
+				if(!rs.getString("ng3Count").equals(""))  dogModel.ng3count += Integer.parseInt(rs.getString("ng3Count"));
+				if(!rs.getString("ng4Count").equals(""))  dogModel.ng4count += Integer.parseInt(rs.getString("ng4Count"));
+				if(!rs.getString("ng5Count").equals(""))  dogModel.ng5count += Integer.parseInt(rs.getString("ng5Count"));
+				if(!rs.getString("ng6Count").equals(""))  dogModel.ng6count += Integer.parseInt(rs.getString("ng6Count"));
+				if(!rs.getString("ng7Count").equals(""))  dogModel.ng7count += Integer.parseInt(rs.getString("ng7Count"));
+				if(!rs.getString("ng8Count").equals(""))  dogModel.ng8count += Integer.parseInt(rs.getString("ng8Count"));
+				if(!rs.getString("ng9Count").equals(""))  dogModel.ng9count += Integer.parseInt(rs.getString("ng9Count"));
+				if(!rs.getString("ng10Count").equals(""))  dogModel.ng10count += Integer.parseInt(rs.getString("ng10Count"));
+				if(!rs.getString("ng11Count").equals(""))  dogModel.ng11count += Integer.parseInt(rs.getString("ng11Count"));
+				if(!rs.getString("ng12Count").equals(""))  dogModel.ng12count += Integer.parseInt(rs.getString("ng12Count"));
+				if(!rs.getString("ng13Count").equals(""))  dogModel.ng13count += Integer.parseInt(rs.getString("ng13Count"));
+				if(!rs.getString("ng14Count").equals(""))  dogModel.ng14count += Integer.parseInt(rs.getString("ng14Count"));
+				if(!rs.getString("ng15Count").equals(""))  dogModel.ng15count += Integer.parseInt(rs.getString("ng15Count"));
+				if(!rs.getString("ng16Count").equals(""))  dogModel.ng16count += Integer.parseInt(rs.getString("ng16Count"));
+				
+				
+			}
+	
+				
+		 
+		 
+		 
+		 
+		 
+		 
+		 
 		 String SQL = "";
 		 SQL += " UPDATE [LMMSWatchLog] SET ";
 		 SQL += "  [machineID]='" + ConfigLog.machinenoSet + "' ";
@@ -1018,44 +1043,44 @@ public class LoadDB {
 		 SQL += ", model14Name = '" + dogModel.model14name + "'";
 		 SQL += ", model15Name = '" + dogModel.model15name + "'";
 		 SQL += ", model16Name = '" + dogModel.model16name + "'";
-		 SQL += ", ok1Count = " + Integer.toString(Math.abs(LoadInspection.jobOk1Count) );
-		 SQL += ", ok2Count = " + Integer.toString(Math.abs(LoadInspection.jobOk2Count));
-		 SQL += ", ok3Count = " + Integer.toString(Math.abs(LoadInspection.jobOk3Count));
-		 SQL += ", ok4Count = " + Integer.toString(Math.abs(LoadInspection.jobOk4Count));
-		 SQL += ", ok5Count = " + Integer.toString(Math.abs(LoadInspection.jobOk5Count));
-		 SQL += ", ok6Count = " + Integer.toString(Math.abs(LoadInspection.jobOk6Count));
-		 SQL += ", ok7Count = " + Integer.toString(Math.abs(LoadInspection.jobOk7Count));
-		 SQL += ", ok8Count = " + Integer.toString(Math.abs(LoadInspection.jobOk8Count));
-		 SQL += ", ok9Count = " + Integer.toString(Math.abs(LoadInspection.jobOk9Count));
-		 SQL += ", ok10Count = " + Integer.toString(Math.abs(LoadInspection.jobOk10Count));
-		 SQL += ", ok11Count = " + Integer.toString(Math.abs(LoadInspection.jobOk11Count));
-		 SQL += ", ok12Count = " + Integer.toString(Math.abs(LoadInspection.jobOk12Count));
-		 SQL += ", ok13Count = " + Integer.toString(Math.abs(LoadInspection.jobOk13Count));
-		 SQL += ", ok14Count = " + Integer.toString(Math.abs(LoadInspection.jobOk14Count));
-		 SQL += ", ok15Count = " + Integer.toString(Math.abs(LoadInspection.jobOk15Count));
-		 SQL += ", ok16Count = " + Integer.toString(Math.abs(LoadInspection.jobOk16Count));
-		 SQL += ", ng1Count = " + Integer.toString(Math.abs(LoadInspection.jobNg1Count) );
-		 SQL += ", ng2Count = " + Integer.toString(Math.abs(LoadInspection.jobNg2Count));
-		 SQL += ", ng3Count = " + Integer.toString(Math.abs(LoadInspection.jobNg3Count));
-		 SQL += ", ng4Count = " + Integer.toString(Math.abs(LoadInspection.jobNg4Count));
-		 SQL += ", ng5Count = " + Integer.toString(Math.abs(LoadInspection.jobNg5Count));
-		 SQL += ", ng6Count = " + Integer.toString(Math.abs(LoadInspection.jobNg6Count));
-		 SQL += ", ng7Count = " + Integer.toString(Math.abs(LoadInspection.jobNg7Count));
-		 SQL += ", ng8Count = " + Integer.toString(Math.abs(LoadInspection.jobNg8Count));
-		 SQL += ", ng9Count = " + Integer.toString(Math.abs(LoadInspection.jobNg9Count));
-		 SQL += ", ng10Count = " + Integer.toString(Math.abs(LoadInspection.jobNg10Count));
-		 SQL += ", ng11Count = " + Integer.toString(Math.abs(LoadInspection.jobNg11Count));
-		 SQL += ", ng12Count = " + Integer.toString(Math.abs(LoadInspection.jobNg12Count));
-		 SQL += ", ng13Count = " + Integer.toString(Math.abs(LoadInspection.jobNg13Count));
-		 SQL += ", ng14Count = " + Integer.toString(Math.abs(LoadInspection.jobNg14Count));
-		 SQL += ", ng15Count = " + Integer.toString(Math.abs(LoadInspection.jobNg15Count));
-		 SQL += ", ng16Count = " + Integer.toString(Math.abs(LoadInspection.jobNg16Count));
+		 SQL += ", ok1Count = " + Integer.toString(Math.abs(dogModel.ok1count));
+		 SQL += ", ok2Count = " + Integer.toString(Math.abs(dogModel.ok2count));
+		 SQL += ", ok3Count = " + Integer.toString(Math.abs(dogModel.ok3count));
+		 SQL += ", ok4Count = " + Integer.toString(Math.abs(dogModel.ok4count));
+		 SQL += ", ok5Count = " + Integer.toString(Math.abs(dogModel.ok5count));
+		 SQL += ", ok6Count = " + Integer.toString(Math.abs(dogModel.ok6count));
+		 SQL += ", ok7Count = " + Integer.toString(Math.abs(dogModel.ok7count));
+		 SQL += ", ok8Count = " + Integer.toString(Math.abs(dogModel.ok8count));
+		 SQL += ", ok9Count = " + Integer.toString(Math.abs(dogModel.ok9count));
+		 SQL += ", ok10Count = " + Integer.toString(Math.abs(dogModel.ok10count));
+		 SQL += ", ok11Count = " + Integer.toString(Math.abs(dogModel.ok11count));
+		 SQL += ", ok12Count = " + Integer.toString(Math.abs(dogModel.ok12count));
+		 SQL += ", ok13Count = " + Integer.toString(Math.abs(dogModel.ok13count));
+		 SQL += ", ok14Count = " + Integer.toString(Math.abs(dogModel.ok14count));
+		 SQL += ", ok15Count = " + Integer.toString(Math.abs(dogModel.ok15count));
+		 SQL += ", ok16Count = " + Integer.toString(Math.abs(dogModel.ok16count));
+		 SQL += ", ng1Count = " + Integer.toString(Math.abs(dogModel.ng1count));
+		 SQL += ", ng2Count = " + Integer.toString(Math.abs(dogModel.ng2count));
+		 SQL += ", ng3Count = " + Integer.toString(Math.abs(dogModel.ng3count));
+		 SQL += ", ng4Count = " + Integer.toString(Math.abs(dogModel.ng4count));
+		 SQL += ", ng5Count = " + Integer.toString(Math.abs(dogModel.ng5count));
+		 SQL += ", ng6Count = " + Integer.toString(Math.abs(dogModel.ng6count));
+		 SQL += ", ng7Count = " + Integer.toString(Math.abs(dogModel.ng7count));
+		 SQL += ", ng8Count = " + Integer.toString(Math.abs(dogModel.ng8count));
+		 SQL +=	", ng9Count = " + Integer.toString(Math.abs(dogModel.ng9count));
+		 SQL += ", ng10Count = " + Integer.toString(Math.abs(dogModel.ng10count));
+		 SQL += ", ng11Count = " + Integer.toString(Math.abs(dogModel.ng11count));
+		 SQL += ", ng12Count = " + Integer.toString(Math.abs(dogModel.ng12count));
+		 SQL += ", ng13Count = " + Integer.toString(Math.abs(dogModel.ng13count));
+		 SQL += ", ng14Count = " + Integer.toString(Math.abs(dogModel.ng14count));
+		 SQL += ", ng15Count = " + Integer.toString(Math.abs(dogModel.ng15count));
+		 SQL += ", ng16Count = " + Integer.toString(Math.abs(dogModel.ng16count));
 		
 		 SQL += " WHERE  ";
 		 SQL += " jobNumber='" + currentJobNumber + "' ";
 		
 		 
-		 stmt = con.createStatement();  
+	
 		 stmt.executeUpdate(SQL);
 	  }  
 	
