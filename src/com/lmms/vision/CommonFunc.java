@@ -162,7 +162,6 @@ public  class CommonFunc {
             in.close();
             out.close();
         }
-        
     }
 	
 	public static void delFile(String path) throws InterruptedException 
@@ -182,9 +181,10 @@ public  class CommonFunc {
 			Boolean Result = file.delete();
 			
 			if(Result) {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 				gc.collect();
-				Thread.sleep(100);
+				Thread.sleep(1000);
+				
 				file.delete();
 			}
 			

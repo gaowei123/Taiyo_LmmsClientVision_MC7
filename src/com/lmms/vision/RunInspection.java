@@ -60,6 +60,11 @@ public class RunInspection implements Runnable{
 					LoadInspection.isCheckingResult = false;
 				}
 			}
+			
+			
+			//whatever count or not, backup & remove file.
+		    CommonFunc.BackUpFile();
+		    
 		}
 		catch (IOException e) { 
 			LoadInspection.isCheckingResult = false;
@@ -67,8 +72,7 @@ public class RunInspection implements Runnable{
 			LoadInspection.isCheckingResult = false;
 		}
 		
-		//whatever count or not, backup & remove file.
-	    CommonFunc.BackUpFile();
+		
 	}
 	
 	

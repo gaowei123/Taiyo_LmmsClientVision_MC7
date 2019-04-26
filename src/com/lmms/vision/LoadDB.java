@@ -255,7 +255,9 @@ public class LoadDB {
 		         currentOperation = rs.getString("currentOperation");
 		         rmsStatus = rs.getString("rmsStatus");
 		         todayTotalQuantityFirstStart =Integer.parseInt(rs.getString("todayTotalQuantity")) ; //only machine 7 no need to +1
-		         startJobFlag = rs.getString("goodOK").equals("true")?true:false;  //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.   
+		         //2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty. 
+		         startJobFlag = rs.getString("goodOK").equals("true")?true:false;  
+		           
 
 		         
 		         str_light = rs.getString("Lighting");
@@ -505,27 +507,6 @@ public class LoadDB {
 		
 	}
 	
-	
-	
-	public static void funStartQuantityChecker()
-	{
-		/*
-		 * int result = JOptionPane.showConfirmDialog(null, MainClient.myPanel2,
-		 * "Manual Quantity:" + LoadDB.currentJobNumber, JOptionPane.OK_CANCEL_OPTION);
-		 * if (result == JOptionPane.OK_OPTION) {
-		 * if(!MainClient.quantityField.getText().isEmpty()) { totalQuantity =
-		 * Integer.parseInt(MainClient.quantityField.getText()); currentQuantity = 0;
-		 * LoadInspection.insTotalPass = 0; LoadInspection.insTotalFail = 0;
-		 * MainClient.lblTotalPass.setText(currentTotalPass);
-		 * MainClient.lblTotalFail.setText(currentTotalFail);
-		 * MainClient.lblQuantity.setText(Integer.toString(totalQuantity));
-		 * MainClient.lblCQuantity.setText(Integer.toString(currentQuantity));
-		 * funUpdateLMMSQuantity(); //runQty = true; } else { runQty = false; }
-		 * 
-		 * //System.out.println(currentQuantity); // funUpdateLMMSQuantity(); //runQty =
-		 * false; //runTechnician = false; } else { runQty = false; }
-		 */
-	}
 	
 	public static void funReadDBMachineIO()
 	{
@@ -818,35 +799,7 @@ public class LoadDB {
 	  }
 	}
 	
-	public static void funSendCountPassLMMS()
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-	  String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.  
-		 String SQL = "UPDATE [LMMSWatchDog] SET [goodOK] ='false' , [dateTime]='" + dateNow.toString() + "',[currentQuantity]=" + LoadDB.currentQuantity + ",[totalQuantity]=" + LoadDB.totalQuantity  + ", [totalPass]=" + LoadInspection.insTotalPass + ",[todayTotalQuantity]=" + todayTotalQuantity + ",[todayOKTotalQuantity]=" + todayOKTotalQuantity + ",[todayNGTotalQuantity]=" + todayNGTotalQuantity + " WHERE jobNumber='" + currentJobNumber + "' AND partNumber='" + currentPartNumber + "' AND machineID='" + ConfigLog.machinenoSet + "'";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		 
-	  }  
 	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	     MainClient.errorInfo.append("\nfunSendCountPassLMMS: " + e.getMessage());
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	  funSendCountPassLMMSLog();
-	}
 	
 	//2018 06 28 added by wei lijia for Machine 6+7
 	public static void funSendCountPassAndFailLMMS(LoadDB.WatchDogModel dogModel)
@@ -950,6 +903,10 @@ public class LoadDB {
 	//2018 06 28 added by wei lijia for Machine 6+7
 	public static void funSendCountPassAndFailLMMSLog(LoadDB.WatchDogModel dogModel)
 	{
+		
+		
+		dogModel = funGet16Count(dogModel);
+		
 		 Connection con = null;
 		  Statement stmt = null;
 		  ResultSet rs = null;
@@ -957,66 +914,6 @@ public class LoadDB {
 		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 		 con = DriverManager.getConnection(connectionUrl);  
 		
-		 
-		 
-		 
-		//2019-04-25  get ok/ng from lmmswatchlog
-		 
-		 
-		 String strSql = "Select * from LMMSWatchLog where jobnumber = '"+currentJobNumber+"'";
-			
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			con = DriverManager.getConnection(connectionUrl);
-		 	stmt = con.createStatement();
-		 	rs = stmt.executeQuery(strSql);  
-
-			while(rs.next()) {
-				
-				if(!rs.getString("ok1Count").equals(""))  dogModel.ok1count += Integer.parseInt(rs.getString("ok1Count"));
-				if(!rs.getString("ok2Count").equals(""))  dogModel.ok2count += Integer.parseInt(rs.getString("ok2Count"));
-				if(!rs.getString("ok3Count").equals(""))  dogModel.ok3count += Integer.parseInt(rs.getString("ok3Count"));
-				if(!rs.getString("ok4Count").equals(""))  dogModel.ok4count += Integer.parseInt(rs.getString("ok4Count"));
-				if(!rs.getString("ok5Count").equals(""))  dogModel.ok5count += Integer.parseInt(rs.getString("ok5Count"));
-				if(!rs.getString("ok6Count").equals(""))  dogModel.ok6count += Integer.parseInt(rs.getString("ok6Count"));
-				if(!rs.getString("ok7Count").equals(""))  dogModel.ok7count += Integer.parseInt(rs.getString("ok7Count"));
-				if(!rs.getString("ok8Count").equals(""))  dogModel.ok8count += Integer.parseInt(rs.getString("ok8Count"));
-				if(!rs.getString("ok9Count").equals(""))  dogModel.ok9count += Integer.parseInt(rs.getString("ok9Count"));
-				if(!rs.getString("ok10Count").equals(""))  dogModel.ok10count += Integer.parseInt(rs.getString("ok10Count"));
-				if(!rs.getString("ok11Count").equals(""))  dogModel.ok11count += Integer.parseInt(rs.getString("ok11Count"));
-				if(!rs.getString("ok12Count").equals(""))  dogModel.ok12count += Integer.parseInt(rs.getString("ok12Count"));
-				if(!rs.getString("ok13Count").equals(""))  dogModel.ok13count += Integer.parseInt(rs.getString("ok13Count"));
-				if(!rs.getString("ok14Count").equals(""))  dogModel.ok14count += Integer.parseInt(rs.getString("ok14Count"));
-				if(!rs.getString("ok15Count").equals(""))  dogModel.ok15count += Integer.parseInt(rs.getString("ok15Count"));
-				if(!rs.getString("ok16Count").equals(""))  dogModel.ok16count += Integer.parseInt(rs.getString("ok16Count"));
-				
-				
-				if(!rs.getString("ng1Count").equals(""))  dogModel.ng1count += Integer.parseInt(rs.getString("ng1Count"));
-				if(!rs.getString("ng2Count").equals(""))  dogModel.ng2count += Integer.parseInt(rs.getString("ng2Count"));
-				if(!rs.getString("ng3Count").equals(""))  dogModel.ng3count += Integer.parseInt(rs.getString("ng3Count"));
-				if(!rs.getString("ng4Count").equals(""))  dogModel.ng4count += Integer.parseInt(rs.getString("ng4Count"));
-				if(!rs.getString("ng5Count").equals(""))  dogModel.ng5count += Integer.parseInt(rs.getString("ng5Count"));
-				if(!rs.getString("ng6Count").equals(""))  dogModel.ng6count += Integer.parseInt(rs.getString("ng6Count"));
-				if(!rs.getString("ng7Count").equals(""))  dogModel.ng7count += Integer.parseInt(rs.getString("ng7Count"));
-				if(!rs.getString("ng8Count").equals(""))  dogModel.ng8count += Integer.parseInt(rs.getString("ng8Count"));
-				if(!rs.getString("ng9Count").equals(""))  dogModel.ng9count += Integer.parseInt(rs.getString("ng9Count"));
-				if(!rs.getString("ng10Count").equals(""))  dogModel.ng10count += Integer.parseInt(rs.getString("ng10Count"));
-				if(!rs.getString("ng11Count").equals(""))  dogModel.ng11count += Integer.parseInt(rs.getString("ng11Count"));
-				if(!rs.getString("ng12Count").equals(""))  dogModel.ng12count += Integer.parseInt(rs.getString("ng12Count"));
-				if(!rs.getString("ng13Count").equals(""))  dogModel.ng13count += Integer.parseInt(rs.getString("ng13Count"));
-				if(!rs.getString("ng14Count").equals(""))  dogModel.ng14count += Integer.parseInt(rs.getString("ng14Count"));
-				if(!rs.getString("ng15Count").equals(""))  dogModel.ng15count += Integer.parseInt(rs.getString("ng15Count"));
-				if(!rs.getString("ng16Count").equals(""))  dogModel.ng16count += Integer.parseInt(rs.getString("ng16Count"));
-				
-				
-			}
-	
-				
-		 
-		 
-		 
-		 
-		 
-		 
 		 
 		 String SQL = "";
 		 SQL += " UPDATE [LMMSWatchLog] SET ";
@@ -1080,7 +977,7 @@ public class LoadDB {
 		 SQL += " jobNumber='" + currentJobNumber + "' ";
 		
 		 
-	
+		 stmt = con.createStatement();  
 		 stmt.executeUpdate(SQL);
 	  }  
 	
@@ -1095,6 +992,90 @@ public class LoadDB {
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
 	  }  
 	}
+	
+	
+	public static LoadDB.WatchDogModel funGet16Count(LoadDB.WatchDogModel dogModel)
+	{
+		
+		if(MainClient.lblpartNumber.getText().equals(""))
+			return dogModel;
+		
+		
+	      Connection con = null;  
+	      Statement stmt = null;  
+	      ResultSet rs = null;  
+
+	      try {  
+	         // Establish the connection.  
+	         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+	         con = DriverManager.getConnection(connectionUrl);
+
+	         String SQL = "SELECT TOP 1 * FROM lmmswatchlog WHERE Jobnumber='" + MainClient.lbljobNumber.getText() + "'";
+	        
+	         stmt = con.createStatement();  
+	         rs = stmt.executeQuery(SQL);  
+	         while (rs.next()) {  
+	        	 //eventID = rs.getString("id");
+	        	 
+	        	 
+	        	 
+	        	 if(!rs.getString("ok1Count").equals("")) dogModel.ok1count += Integer.parseInt(rs.getString("ok1Count"));
+	        	 if(!rs.getString("ok2Count").equals("")) dogModel.ok2count += Integer.parseInt(rs.getString("ok2Count"));
+	        	 if(!rs.getString("ok3Count").equals("")) dogModel.ok3count += Integer.parseInt(rs.getString("ok3Count"));
+	        	 if(!rs.getString("ok4Count").equals("")) dogModel.ok4count += Integer.parseInt(rs.getString("ok4Count"));
+	        	 if(!rs.getString("ok5Count").equals("")) dogModel.ok5count += Integer.parseInt(rs.getString("ok5Count"));
+	        	 if(!rs.getString("ok6Count").equals("")) dogModel.ok6count += Integer.parseInt(rs.getString("ok6Count"));
+	        	 if(!rs.getString("ok7Count").equals("")) dogModel.ok7count += Integer.parseInt(rs.getString("ok7Count"));
+	        	 if(!rs.getString("ok8Count").equals("")) dogModel.ok8count += Integer.parseInt(rs.getString("ok8Count"));
+	        	 if(!rs.getString("ok9Count").equals("")) dogModel.ok9count += Integer.parseInt(rs.getString("ok9Count"));
+	        	 if(!rs.getString("ok10Count").equals("")) dogModel.ok10count += Integer.parseInt(rs.getString("ok10Count"));
+	        	 if(!rs.getString("ok11Count").equals("")) dogModel.ok11count += Integer.parseInt(rs.getString("ok11Count"));
+	        	 if(!rs.getString("ok12Count").equals("")) dogModel.ok12count += Integer.parseInt(rs.getString("ok12Count"));
+	        	 if(!rs.getString("ok13Count").equals("")) dogModel.ok13count += Integer.parseInt(rs.getString("ok13Count"));
+	        	 if(!rs.getString("ok14Count").equals("")) dogModel.ok14count += Integer.parseInt(rs.getString("ok14Count"));
+	        	 if(!rs.getString("ok15Count").equals("")) dogModel.ok15count += Integer.parseInt(rs.getString("ok15Count"));
+	        	 if(!rs.getString("ok16Count").equals("")) dogModel.ok16count += Integer.parseInt(rs.getString("ok16Count"));
+	        	 
+	        
+	        	 if(!rs.getString("ng1Count").equals("")) dogModel.ng1count += Integer.parseInt(rs.getString("ng1Count"));
+	        	 if(!rs.getString("ng2Count").equals("")) dogModel.ng2count += Integer.parseInt(rs.getString("ng2Count"));
+	        	 if(!rs.getString("ng3Count").equals("")) dogModel.ng3count += Integer.parseInt(rs.getString("ng3Count"));
+	        	 if(!rs.getString("ng4Count").equals("")) dogModel.ng4count += Integer.parseInt(rs.getString("ng4Count"));
+	        	 if(!rs.getString("ng5Count").equals("")) dogModel.ng5count += Integer.parseInt(rs.getString("ng5Count"));
+	        	 if(!rs.getString("ng6Count").equals("")) dogModel.ng6count += Integer.parseInt(rs.getString("ng6Count"));
+	        	 if(!rs.getString("ng7Count").equals("")) dogModel.ng7count += Integer.parseInt(rs.getString("ng7Count"));
+	        	 if(!rs.getString("ng8Count").equals("")) dogModel.ng8count += Integer.parseInt(rs.getString("ng8Count"));
+	        	 if(!rs.getString("ng9Count").equals("")) dogModel.ng9count += Integer.parseInt(rs.getString("ng9Count"));
+	        	 if(!rs.getString("ng10Count").equals("")) dogModel.ng10count += Integer.parseInt(rs.getString("ng10Count"));
+	        	 if(!rs.getString("ng11Count").equals("")) dogModel.ng11count += Integer.parseInt(rs.getString("ng11Count"));
+	        	 if(!rs.getString("ng12Count").equals("")) dogModel.ng12count += Integer.parseInt(rs.getString("ng12Count"));
+	        	 if(!rs.getString("ng13Count").equals("")) dogModel.ng13count += Integer.parseInt(rs.getString("ng13Count"));
+	        	 if(!rs.getString("ng14Count").equals("")) dogModel.ng14count += Integer.parseInt(rs.getString("ng14Count"));
+	        	 if(!rs.getString("ng15Count").equals("")) dogModel.ng15count += Integer.parseInt(rs.getString("ng15Count"));
+	        	 if(!rs.getString("ng16Count").equals("")) dogModel.ng16count += Integer.parseInt(rs.getString("ng16Count"));
+	        	 
+	         }  
+	         
+	      }  
+
+	      // Handle any errors that may have occurred.  
+	      catch (Exception e) {  
+	         e.printStackTrace();  
+	      }  
+	      finally {  
+	         if (rs != null) try { rs.close(); } catch(Exception e) {}  
+	         if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
+	         if (con != null) try { con.close(); } catch(Exception e) {}  
+	      }  
+	      
+	      
+	      
+	      return dogModel;
+	}
+	
+	
+	
+	
 	
 	public static void funSendCountPassLMMSLog()
 	{
@@ -1123,35 +1104,7 @@ public class LoadDB {
 	  }  
 	}
 	
-	public static void funSendCountFailLMMS()
-	{
-	  Connection con = null;  
-	  Statement stmt = null;  
-	  ResultSet rs = null;  
-	  try {  
-		 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		 con = DriverManager.getConnection(connectionUrl);  
-		
-		//2018 07 03 barcode app will update goodOK=true while scan jobnumber,update goodok=false after update qty .  system will auto capture the new qty.  
-		 String SQL = "UPDATE [LMMSWatchDog] SET [goodOK] ='false' , [dateTime]=GETDATE(),[currentQuantity]=" + LoadDB.currentQuantity + ",[totalQuantity]=" + LoadDB.totalQuantity  + ",  [totalFail]=" + LoadInspection.insTotalFail + ",[todayTotalQuantity]=" + todayTotalQuantity + ",[todayOKTotalQuantity]=" + todayOKTotalQuantity + ",[todayNGTotalQuantity]=" + todayNGTotalQuantity + " WHERE jobNumber='" + currentJobNumber + "' AND partNumber='" + currentPartNumber + "' AND machineID='" + ConfigLog.machinenoSet + "'";
-		 stmt = con.createStatement();  
-		 stmt.executeUpdate(SQL); 
-		
-		
-	  }  
 	
-	  // Handle any errors that may have occurred.  
-	  catch (Exception e) {  
-	     e.printStackTrace();  
-	     MainClient.errorInfo.append("\nfunSendCountFailLMMS: " + e.getMessage());
-	  }  
-	  finally {  
-	     if (rs != null) try { rs.close(); } catch(Exception e) {}  
-	     if (stmt != null) try { stmt.close(); } catch(Exception e) {}  
-	     if (con != null) try { con.close(); } catch(Exception e) {}  
-	  }  
-	  funSendCountFailLMMSLog();
-	}
 	
 	public static void funSendCountFailLMMSLog()
 	{
@@ -1178,9 +1131,6 @@ public class LoadDB {
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
 	  }  
 	}
-	
-	
-	
 	
 	public static void funSendStartVisionLMMS()
 	{
@@ -1297,6 +1247,10 @@ public class LoadDB {
 	     if (con != null) try { con.close(); } catch(Exception e) {}  
 	  }  
 	}
+	
+	
+	
+	
 	
 	
 }
